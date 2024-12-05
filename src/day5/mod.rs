@@ -1,7 +1,9 @@
-fn parse_input(input: &str) -> (Vec<(i32, i32)>, Vec<Vec<i32>>) {
+use std::collections::{HashMap, HashSet};
+
+fn parse_input(input: &str) -> (HashMap<i32, HashSet<i32>>, Vec<Vec<i32>>) {
     let mut lines = input.lines();
 
-    let mut rules = Vec::<(i32, i32)>::new();
+    let mut rules = HashMap::new();
     while let Some(line) = lines.next() {
         if line.is_empty() {
             break;
@@ -12,7 +14,7 @@ fn parse_input(input: &str) -> (Vec<(i32, i32)>, Vec<Vec<i32>>) {
             parts.next().unwrap().parse().unwrap(),
             parts.next().unwrap().parse().unwrap(),
         );
-        rules.push((a, b));
+        rules.entry(a).or_insert_with(HashSet::new).insert(b);
     }
 
     let mut orderings = Vec::<Vec<i32>>::new();
@@ -22,34 +24,35 @@ fn parse_input(input: &str) -> (Vec<(i32, i32)>, Vec<Vec<i32>>) {
     (rules, orderings)
 }
 
-fn is_valid_ordering(ordering: &[i32], rules: &[(i32, i32)]) -> bool {
-    for (a, b) in rules {
-        if let Some(p_a) = ordering.iter().position(|&x| x == *a) {
-            if let Some(p_b) = ordering.iter().position(|&x| x == *b) {
-                if p_a > p_b {
-                    return false;
-                }
+fn is_valid_ordering(ordering: &[i32], rules: &HashMap<i32, HashSet<i32>>) -> bool {
+    for (i, page) in ordering.iter().enumerate() {
+        if let Some(afters) = rules.get(page) {
+            if afters.iter().any(|a| ordering[..i].contains(a)) {
+                return false;
             }
         }
     }
     true
 }
 
-fn make_ordering_valid(ordering: &mut [i32], rules: &[(i32, i32)]) -> bool {
-    let mut was_invalid = false;
-    while !is_valid_ordering(ordering, rules) {
-        for (a, b) in rules {
-            if let Some(p_a) = ordering.iter().position(|&x| x == *a) {
-                if let Some(p_b) = ordering.iter().position(|&x| x == *b) {
-                    if p_a > p_b {
-                        ordering.swap(p_a, p_b);
-                        was_invalid = true;
-                    }
-                }
-            }
-        }
+fn make_ordering_valid(ordering: &mut [i32], rules: &HashMap<i32, HashSet<i32>>) -> bool {
+    if is_valid_ordering(ordering, rules) {
+        return false;
     }
-    was_invalid
+
+    let sort_key = ordering
+        .iter()
+        .map(|x| {
+            (
+                *x,
+                rules.get(x).map_or(0, |afters| {
+                    ordering.iter().filter(|y| afters.contains(y)).count()
+                }),
+            )
+        })
+        .collect::<HashMap<i32, usize>>();
+    ordering.sort_by_key(|x| sort_key[x]);
+    true
 }
 
 pub fn part_1(input: &str) -> i32 {
