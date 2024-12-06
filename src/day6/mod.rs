@@ -65,7 +65,7 @@ pub fn part_1(input: &str) -> usize {
     points.len()
 }
 
-pub fn is_loop(grid: Vec<Vec<u8>>, x: usize, y: usize) -> bool {
+pub fn is_loop(grid: &Vec<Vec<u8>>, x: usize, y: usize) -> bool {
     let rows = grid.len() as isize;
     let cols = grid[0].len() as isize;
     let mut i = x as isize;
@@ -96,7 +96,7 @@ pub fn is_loop(grid: Vec<Vec<u8>>, x: usize, y: usize) -> bool {
 }
 
 pub fn part_2(input: &str) -> usize {
-    let grid = parse_input(input);
+    let mut grid = parse_input(input);
     let (x, y) = guard_position(&grid);
     let rows = grid.len();
     let cols = grid[0].len();
@@ -108,11 +108,11 @@ pub fn part_2(input: &str) -> usize {
                 continue;
             }
             if grid[i][j] == b'.' {
-                let mut grid = grid.clone();
                 grid[i][j] = b'#';
-                if is_loop(grid, x, y) {
+                if is_loop(&grid, x, y) {
                     count += 1;
                 }
+                grid[i][j] = b'.';
             }
         }
     }
