@@ -73,7 +73,6 @@ pub fn is_loop(grid: &Vec<Vec<u8>>, x: usize, y: usize) -> bool {
 
     let mut guard = grid[x][y];
     let mut dir = direction(guard);
-    let mut points = HashSet::<(isize, isize)>::new();
     let mut points_with_dir = HashSet::<(isize, isize, char)>::new();
 
     while i >= 0 && i < cols && j >= 0 && j < rows {
@@ -83,7 +82,6 @@ pub fn is_loop(grid: &Vec<Vec<u8>>, x: usize, y: usize) -> bool {
             guard = turn_right(guard);
             dir = direction(guard);
         } else {
-            points.insert((i, j));
             if !points_with_dir.insert((i, j, guard as char)) {
                 return true;
             }
