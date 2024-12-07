@@ -23,7 +23,7 @@ pub fn part_1(input: &str) -> usize {
     let mut dir = direction(grid[start]);
 
     let mut current = start;
-    let mut visited = HashSet::<Point>::new();
+    let mut visited = HashSet::new();
 
     while grid.get(current).is_some() {
         visited.insert(current);
@@ -38,7 +38,7 @@ pub fn part_1(input: &str) -> usize {
 
 pub fn is_loop(grid: &Matrix, start: Point) -> bool {
     let mut dir = direction(grid[start]);
-    let mut visited = HashSet::<(Point, Direction)>::new();
+    let mut visited = HashSet::new();
 
     let mut current = start;
     while grid.get(current).is_some() {
