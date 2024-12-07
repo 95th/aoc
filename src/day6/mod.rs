@@ -23,37 +23,34 @@ pub fn part_1(input: &str) -> usize {
     let mut dir = direction(grid[start]);
 
     let mut current = start;
-    let mut points = HashSet::<Point>::new();
+    let mut visited = HashSet::<Point>::new();
 
     while grid.get(current).is_some() {
-        let next = current.step(dir);
-        if grid.get(next) == Some(b'#') {
+        visited.insert(current);
+        if grid.get(current.step(dir)) == Some(b'#') {
             dir = dir.turn_right();
-        } else {
-            current = next;
-            if !points.insert(current) {
-                break;
-            }
         }
+        current = current.step(dir);
     }
 
-    points.len()
+    visited.len()
 }
 
 pub fn is_loop(grid: &Matrix, start: Point) -> bool {
     let mut dir = direction(grid[start]);
-    let mut points_with_dir = HashSet::<(Point, Direction)>::new();
+    let mut visited = HashSet::<(Point, Direction)>::new();
 
     let mut current = start;
     while grid.get(current).is_some() {
+        if !visited.insert((current, dir)) {
+            return true;
+        }
+
         let next = current.step(dir);
         if grid.get(next) == Some(b'#') {
             dir = dir.turn_right();
         } else {
             current = next;
-            if !points_with_dir.insert((current, dir)) {
-                return true;
-            }
         }
     }
 
