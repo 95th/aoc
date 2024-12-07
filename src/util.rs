@@ -22,24 +22,43 @@ impl Point {
     }
 }
 
-pub struct Matrix {
-    pub data: Vec<Vec<u8>>,
+pub struct Matrix<T> {
+    pub data: Vec<Vec<T>>,
 }
 
-impl Matrix {
+impl Matrix<u8> {
     pub fn parse(str: &str) -> Self {
         Self {
             data: str.lines().map(|line| line.bytes().collect()).collect(),
         }
     }
+}
+
+impl<T> Matrix<T> {
+    pub fn new(rows: usize, cols: usize, fill: T) -> Self
+    where
+        T: Clone,
+    {
+        Self {
+            data: vec![vec![fill; cols]; rows],
+        }
+    }
+
+    pub fn rows(&self) -> usize {
+        self.data.len()
+    }
+
+    pub fn cols(&self) -> usize {
+        self.data[0].len()
+    }
 
     pub fn iter_points(&self) -> impl Iterator<Item = Point> {
-        let rows = self.data.len() as i32;
-        let cols = self.data[0].len() as i32;
+        let rows = self.rows() as i32;
+        let cols = self.cols() as i32;
         (0..rows).flat_map(move |i| (0..cols).map(move |j| Point(i, j)))
     }
 
-    pub fn get(&self, Point(i, j): Point) -> Option<u8> {
+    pub fn get(&self, Point(i, j): Point) -> Option<&T> {
         if i < 0 || j < 0 {
             return None;
         }
@@ -47,12 +66,15 @@ impl Matrix {
         self.data
             .get(i as usize)
             .and_then(|row| row.get(j as usize))
-            .copied()
     }
 
-    pub fn find(&self, filter: impl Fn(u8) -> bool) -> Option<Point> {
+    pub fn has_point(&self, Point(i, j): Point) -> bool {
+        i >= 0 && j >= 0 && i < self.rows() as i32 && j < self.cols() as i32
+    }
+
+    pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Point> {
         for (i, row) in self.data.iter().enumerate() {
-            if let Some(j) = row.iter().position(|&cell| filter(cell)) {
+            if let Some(j) = row.iter().position(|cell| filter(cell)) {
                 return Some(Point(i as i32, j as i32));
             }
         }
@@ -61,8 +83,8 @@ impl Matrix {
     }
 }
 
-impl Index<Point> for Matrix {
-    type Output = u8;
+impl<T> Index<Point> for Matrix<T> {
+    type Output = T;
 
     fn index(&self, Point(i, j): Point) -> &Self::Output {
         assert!(i >= 0 && j >= 0);
@@ -70,7 +92,7 @@ impl Index<Point> for Matrix {
     }
 }
 
-impl IndexMut<Point> for Matrix {
+impl<T> IndexMut<Point> for Matrix<T> {
     fn index_mut(&mut self, Point(i, j): Point) -> &mut Self::Output {
         assert!(i >= 0 && j >= 0);
         &mut self.data[i as usize][j as usize]

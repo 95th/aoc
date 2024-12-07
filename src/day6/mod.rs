@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use crate::util::{Direction, Matrix, Point};
 
 fn direction(guard: u8) -> Direction {
@@ -12,7 +10,7 @@ fn direction(guard: u8) -> Direction {
     }
 }
 
-fn guard_position(grid: &Matrix) -> Point {
+fn guard_position(grid: &Matrix<u8>) -> Point {
     grid.find(|c| matches!(c, b'^' | b'v' | b'<' | b'>'))
         .unwrap()
 }
@@ -23,31 +21,36 @@ pub fn part_1(input: &str) -> usize {
     let mut dir = direction(grid[start]);
 
     let mut current = start;
-    let mut visited = HashSet::new();
+    let mut steps = Matrix::new(grid.rows(), grid.cols(), false);
+    let mut count = 0;
 
-    while grid.get(current).is_some() {
-        visited.insert(current);
-        if grid.get(current.step(dir)) == Some(b'#') {
+    while grid.has_point(current) {
+        if !steps[current] {
+            steps[current] = true;
+            count += 1;
+        }
+        if grid.get(current.step(dir)) == Some(&b'#') {
             dir = dir.turn_right();
         }
         current = current.step(dir);
     }
 
-    visited.len()
+    count
 }
 
-pub fn is_loop(grid: &Matrix, start: Point) -> bool {
+pub fn is_loop(grid: &Matrix<u8>, start: Point) -> bool {
     let mut dir = direction(grid[start]);
-    let mut visited = HashSet::new();
+    let mut steps = Matrix::new(grid.rows(), grid.cols(), [false; 4]);
 
     let mut current = start;
-    while grid.get(current).is_some() {
-        if !visited.insert((current, dir)) {
+    while grid.has_point(current) {
+        if steps[current][dir as usize] {
             return true;
         }
+        steps[current][dir as usize] = true;
 
         let next = current.step(dir);
-        if grid.get(next) == Some(b'#') {
+        if grid.get(next) == Some(&b'#') {
             dir = dir.turn_right();
         } else {
             current = next;
