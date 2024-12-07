@@ -1,118 +1,79 @@
 use std::collections::HashSet;
 
-fn parse_input(input: &str) -> Vec<Vec<u8>> {
-    input.lines().map(|s| s.as_bytes().to_vec()).collect()
-}
+use crate::util::{Direction, Matrix, Point};
 
-fn direction(guard: u8) -> (isize, isize) {
+fn direction(guard: u8) -> Direction {
     match guard {
-        b'^' => (-1, 0),
-        b'v' => (1, 0),
-        b'<' => (0, -1),
-        b'>' => (0, 1),
+        b'^' => Direction::Up,
+        b'v' => Direction::Down,
+        b'<' => Direction::Left,
+        b'>' => Direction::Right,
         _ => unreachable!(),
     }
 }
 
-fn turn_right(guard: u8) -> u8 {
-    match guard {
-        b'^' => b'>',
-        b'v' => b'<',
-        b'<' => b'^',
-        b'>' => b'v',
-        _ => unreachable!(),
-    }
-}
-
-fn guard_position(grid: &Vec<Vec<u8>>) -> (usize, usize) {
-    for (i, row) in grid.iter().enumerate() {
-        for (j, &cell) in row.iter().enumerate() {
-            if cell == b'^' || cell == b'v' || cell == b'<' || cell == b'>' {
-                return (i, j);
-            }
-        }
-    }
-
-    unreachable!()
+fn guard_position(grid: &Matrix) -> Point {
+    grid.find(|c| matches!(c, b'^' | b'v' | b'<' | b'>'))
+        .unwrap()
 }
 
 pub fn part_1(input: &str) -> usize {
-    let grid = parse_input(input);
-    let (x, y) = guard_position(&grid);
+    let grid = Matrix::parse(input);
+    let start = guard_position(&grid);
+    let mut dir = direction(grid[start]);
 
-    let rows = grid.len() as isize;
-    let cols = grid[0].len() as isize;
-    let mut i = x as isize;
-    let mut j = y as isize;
+    let mut current = start;
+    let mut points = HashSet::<Point>::new();
 
-    let mut guard = grid[x][y];
-    let mut dir = direction(guard);
-    let mut points = HashSet::<(isize, isize)>::new();
-
-    while i >= 0 && i < cols && j >= 0 && j < rows {
-        if grid[i as usize][j as usize] == b'#' {
-            i -= dir.0;
-            j -= dir.1;
-            guard = turn_right(guard);
-            dir = direction(guard);
+    while grid.get(current).is_some() {
+        let next = current.step(dir);
+        if grid.get(next) == Some(b'#') {
+            dir = dir.turn_right();
         } else {
-            points.insert((i, j));
+            current = next;
+            if !points.insert(current) {
+                break;
+            }
         }
-        i += dir.0;
-        j += dir.1;
     }
 
     points.len()
 }
 
-pub fn is_loop(grid: &Vec<Vec<u8>>, x: usize, y: usize) -> bool {
-    let rows = grid.len() as isize;
-    let cols = grid[0].len() as isize;
-    let mut i = x as isize;
-    let mut j = y as isize;
+pub fn is_loop(grid: &Matrix, start: Point) -> bool {
+    let mut dir = direction(grid[start]);
+    let mut points_with_dir = HashSet::<(Point, Direction)>::new();
 
-    let mut guard = grid[x][y];
-    let mut dir = direction(guard);
-    let mut points_with_dir = HashSet::<(isize, isize, char)>::new();
-
-    while i >= 0 && i < cols && j >= 0 && j < rows {
-        if grid[i as usize][j as usize] == b'#' {
-            i -= dir.0;
-            j -= dir.1;
-            guard = turn_right(guard);
-            dir = direction(guard);
+    let mut current = start;
+    while grid.get(current).is_some() {
+        let next = current.step(dir);
+        if grid.get(next) == Some(b'#') {
+            dir = dir.turn_right();
         } else {
-            if !points_with_dir.insert((i, j, guard as char)) {
+            current = next;
+            if !points_with_dir.insert((current, dir)) {
                 return true;
             }
         }
-        i += dir.0;
-        j += dir.1;
     }
 
     false
 }
 
 pub fn part_2(input: &str) -> usize {
-    let mut grid = parse_input(input);
-    let (x, y) = guard_position(&grid);
-    let rows = grid.len();
-    let cols = grid[0].len();
+    let mut grid = Matrix::parse(input);
+    let start = guard_position(&grid);
 
     let mut count = 0;
-    for i in 0..rows {
-        for j in 0..cols {
-            if i == x && j == y {
-                continue;
-            }
-            if grid[i][j] == b'.' {
-                grid[i][j] = b'#';
-                if is_loop(&grid, x, y) {
-                    count += 1;
-                }
-                grid[i][j] = b'.';
-            }
+    for point in grid.iter_points() {
+        if point == start || grid[point] == b'#' {
+            continue;
         }
+        grid[point] = b'#';
+        if is_loop(&grid, start) {
+            count += 1;
+        }
+        grid[point] = b'.';
     }
     count
 }
