@@ -16,7 +16,7 @@ fn guard_position(grid: &Matrix<u8>) -> Point {
 }
 
 pub fn part_1(input: &str) -> usize {
-    let grid = Matrix::parse(input);
+    let grid = Matrix::from_bytes(input);
     let start = guard_position(&grid);
     let mut dir = direction(grid[start]);
 
@@ -61,7 +61,7 @@ pub fn is_loop(grid: &Matrix<u8>, start: Point) -> bool {
 }
 
 pub fn part_2(input: &str) -> usize {
-    let mut grid = Matrix::parse(input);
+    let mut grid = Matrix::from_bytes(input);
     let start = guard_position(&grid);
 
     let mut count = 0;

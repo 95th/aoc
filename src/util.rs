@@ -1,4 +1,8 @@
-use std::ops::{Index, IndexMut};
+use std::{
+    fmt::Debug,
+    ops::{Index, IndexMut},
+    str::FromStr,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Direction {
@@ -27,10 +31,21 @@ pub struct Matrix<T> {
 }
 
 impl Matrix<u8> {
-    pub fn parse(str: &str) -> Self {
+    pub fn from_bytes(str: &str) -> Self {
         Self {
             data: str.lines().map(|line| line.bytes().collect()).collect(),
         }
+    }
+}
+
+impl<T: FromStr> Matrix<T> {
+    pub fn parse(str: &str) -> Result<Self, T::Err> {
+        Ok(Self {
+            data: str
+                .lines()
+                .map(|line| line.split_whitespace().map(|s| s.parse()).collect())
+                .collect::<Result<Vec<Vec<_>>, _>>()?,
+        })
     }
 }
 
