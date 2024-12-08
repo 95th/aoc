@@ -49,7 +49,7 @@ pub fn part_2(input: &str) -> u32 {
         }
     }
 
-    let mut antinodes = grid.map(false);
+    let mut antinodes = grid.map(1);
     let mut count = 0;
 
     for points in map.values() {
@@ -60,19 +60,15 @@ pub fn part_2(input: &str) -> u32 {
                 let dist = b - a;
 
                 let mut before = a;
-                while let Some(set) = antinodes.replace(before, true) {
+                while let Some(value) = antinodes.replace(before, 0) {
                     before -= dist;
-                    if !set {
-                        count += 1;
-                    }
+                    count += value;
                 }
 
                 let mut after = b;
-                while let Some(set) = antinodes.replace(after, true) {
+                while let Some(value) = antinodes.replace(after, 0) {
                     after += dist;
-                    if !set {
-                        count += 1;
-                    }
+                    count += value;
                 }
             }
         }
