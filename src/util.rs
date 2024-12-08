@@ -85,12 +85,9 @@ impl<T: FromStr> Matrix<T> {
 }
 
 impl<T> Matrix<T> {
-    pub fn new(rows: usize, cols: usize, fill: T) -> Self
-    where
-        T: Clone,
-    {
-        Self {
-            data: vec![vec![fill; cols]; rows],
+    pub fn map<U: Clone>(&self, value: U) -> Matrix<U> {
+        Matrix {
+            data: vec![vec![value; self.cols()]; self.rows()],
         }
     }
 

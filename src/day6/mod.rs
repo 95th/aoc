@@ -21,7 +21,7 @@ pub fn part_1(input: &str) -> usize {
     let mut dir = direction(grid[start]);
 
     let mut current = start;
-    let mut steps = Matrix::new(grid.rows(), grid.cols(), false);
+    let mut steps = grid.map(false);
     let mut count = 0;
 
     while grid.has_point(current) {
@@ -40,7 +40,7 @@ pub fn part_1(input: &str) -> usize {
 
 pub fn is_loop(grid: &Matrix<u8>, start: Point) -> bool {
     let mut dir = direction(grid[start]);
-    let mut steps = Matrix::new(grid.rows(), grid.cols(), [false; 4]);
+    let mut steps = grid.map([false; 4]);
 
     let mut current = start;
     while grid.has_point(current) {

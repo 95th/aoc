@@ -13,7 +13,7 @@ pub fn part_1(input: &str) -> u32 {
         }
     }
 
-    let mut antinodes = Matrix::new(grid.rows(), grid.cols(), false);
+    let mut antinodes = grid.map(false);
     let mut count = 0;
 
     for points in map.values() {
@@ -49,7 +49,7 @@ pub fn part_2(input: &str) -> u32 {
         }
     }
 
-    let mut antinodes = Matrix::new(grid.rows(), grid.cols(), false);
+    let mut antinodes = grid.map(false);
     let mut count = 0;
 
     for points in map.values() {
