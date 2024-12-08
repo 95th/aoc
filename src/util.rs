@@ -26,6 +26,41 @@ impl Point {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct Distance(pub i32, pub i32);
+
+impl std::ops::Mul<i32> for Distance {
+    type Output = Distance;
+
+    fn mul(self, value: i32) -> Self::Output {
+        Distance(self.0 * value, self.1 * value)
+    }
+}
+
+impl std::ops::Add<Distance> for Point {
+    type Output = Point;
+
+    fn add(self, Distance(i, j): Distance) -> Self::Output {
+        Point(self.0 + i, self.1 + j)
+    }
+}
+
+impl std::ops::Sub<Point> for Point {
+    type Output = Distance;
+
+    fn sub(self, Point(i, j): Point) -> Self::Output {
+        Distance(self.0 - i, self.1 - j)
+    }
+}
+
+impl std::ops::Sub<Distance> for Point {
+    type Output = Point;
+
+    fn sub(self, Distance(i, j): Distance) -> Self::Output {
+        Point(self.0 - i, self.1 - j)
+    }
+}
+
 pub struct Matrix<T> {
     pub data: Vec<Vec<T>>,
 }
