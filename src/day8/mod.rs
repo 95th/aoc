@@ -18,17 +18,17 @@ pub fn part_1(input: &str) -> u32 {
 
     for points in map.values() {
         for i in 0..points.len() {
+            let a = points[i];
             for j in i + 1..points.len() {
-                let dist = points[j] - points[i];
-                let before = points[i] - dist;
-                let after = points[j] + dist;
+                let b = points[j];
+                let dist = b - a;
+                let before = a - dist;
+                let after = b + dist;
 
-                if grid.has_point(before) && !antinodes[before] {
-                    antinodes[before] = true;
+                if let Some(false) = antinodes.replace(before, true) {
                     count += 1;
                 }
-                if grid.has_point(after) && !antinodes[after] {
-                    antinodes[after] = true;
+                if let Some(false) = antinodes.replace(after, true) {
                     count += 1;
                 }
             }
@@ -57,32 +57,22 @@ pub fn part_2(input: &str) -> u32 {
             let a = points[i];
             for j in i + 1..points.len() {
                 let b = points[j];
-                if !antinodes[a] {
-                    antinodes[a] = true;
-                    count += 1;
-                }
-                if !antinodes[b] {
-                    antinodes[b] = true;
-                    count += 1;
-                }
                 let dist = b - a;
 
-                let mut before = a - dist;
-                while grid.has_point(before) {
-                    if !antinodes[before] {
-                        antinodes[before] = true;
+                let mut before = a;
+                while let Some(set) = antinodes.replace(before, true) {
+                    before -= dist;
+                    if !set {
                         count += 1;
                     }
-                    before = before - dist;
                 }
 
-                let mut after = a + dist;
-                while grid.has_point(after) {
-                    if !antinodes[after] {
-                        antinodes[after] = true;
+                let mut after = b;
+                while let Some(set) = antinodes.replace(after, true) {
+                    after += dist;
+                    if !set {
                         count += 1;
                     }
-                    after = after + dist;
                 }
             }
         }

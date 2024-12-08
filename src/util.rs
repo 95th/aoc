@@ -45,6 +45,13 @@ impl std::ops::Add<Distance> for Point {
     }
 }
 
+impl std::ops::AddAssign<Distance> for Point {
+    fn add_assign(&mut self, Distance(i, j): Distance) {
+        self.0 += i;
+        self.1 += j;
+    }
+}
+
 impl std::ops::Sub<Point> for Point {
     type Output = Distance;
 
@@ -58,6 +65,13 @@ impl std::ops::Sub<Distance> for Point {
 
     fn sub(self, Distance(i, j): Distance) -> Self::Output {
         Point(self.0 - i, self.1 - j)
+    }
+}
+
+impl std::ops::SubAssign<Distance> for Point {
+    fn sub_assign(&mut self, Distance(i, j): Distance) {
+        self.0 -= i;
+        self.1 -= j;
     }
 }
 
@@ -85,6 +99,15 @@ impl<T: FromStr> Matrix<T> {
 }
 
 impl<T> Matrix<T> {
+    pub fn replace(&mut self, point: Point, mut value: T) -> Option<T> {
+        if self.has_point(point) {
+            std::mem::swap(&mut self[point], &mut value);
+            Some(value)
+        } else {
+            None
+        }
+    }
+
     pub fn map<U: Clone>(&self, value: U) -> Matrix<U> {
         Matrix {
             data: vec![vec![value; self.cols()]; self.rows()],
