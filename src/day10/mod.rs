@@ -1,9 +1,59 @@
-pub fn part_1(input: &str) -> u32 {
-    todo!()
+use std::collections::HashSet;
+
+use crate::util::{Direction, Matrix, Point};
+
+fn find_trail(
+    grid: &Matrix<u8>,
+    point: Point,
+    value: u8,
+    destinations: &mut HashSet<Point>,
+) -> usize {
+    if let Some(b'9') = grid.get(point) {
+        destinations.insert(point);
+        return 1;
+    }
+
+    Direction::all().into_iter().fold(0, |count, dir| {
+        let point = point.step(dir);
+        if grid.get(point) == Some(&value) {
+            count + find_trail(grid, point, value + 1, destinations)
+        } else {
+            count
+        }
+    })
 }
 
-pub fn part_2(input: &str) -> u32 {
-    todo!()
+pub fn part_1(input: &str) -> usize {
+    let grid = Matrix::from_bytes(input);
+
+    let mut sum = 0;
+    let destinations = &mut HashSet::new();
+
+    for point in grid.iter_points() {
+        if grid[point] == b'0' {
+            find_trail(&grid, point, b'1', destinations);
+            sum += destinations.len();
+            destinations.clear();
+        }
+    }
+
+    sum
+}
+
+pub fn part_2(input: &str) -> usize {
+    let grid = Matrix::from_bytes(input);
+
+    let mut sum = 0;
+    let destinations = &mut HashSet::new();
+
+    for point in grid.iter_points() {
+        if grid[point] == b'0' {
+            sum += find_trail(&grid, point, b'1', destinations);
+            destinations.clear();
+        }
+    }
+
+    sum
 }
 
 #[test]
@@ -20,12 +70,26 @@ fn run_part_2() {
 
 #[test]
 fn test_part_1() {
-    let data = r"";
-    assert_eq!(part_1(data), 18);
+    let data = r"89010123
+78121874
+87430965
+96549874
+45678903
+32019012
+01329801
+10456732";
+    assert_eq!(part_1(data), 36);
 }
 
 #[test]
 fn test_part_2() {
-    let data = r"";
-    assert_eq!(part_2(data), 9);
+    let data = r"89010123
+78121874
+87430965
+96549874
+45678903
+32019012
+01329801
+10456732";
+    assert_eq!(part_2(data), 81);
 }

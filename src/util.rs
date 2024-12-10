@@ -12,6 +12,12 @@ pub enum Direction {
     Right,
 }
 
+impl Direction {
+    pub fn all() -> [Self; 4] {
+        [Self::Up, Self::Down, Self::Left, Self::Right]
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Point(pub i32, pub i32);
 
