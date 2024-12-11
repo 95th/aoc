@@ -1,6 +1,14 @@
 use std::collections::HashMap;
 
-pub fn blink(map: &mut HashMap<usize, usize>) {
+fn parse_input(input: &str) -> HashMap<usize, usize> {
+    let mut map = HashMap::new();
+    for part in input.split_ascii_whitespace() {
+        *map.entry(part.parse().unwrap()).or_insert(0) += 1;
+    }
+    map
+}
+
+fn blink(map: &mut HashMap<usize, usize>) {
     let data = std::mem::replace(map, HashMap::new());
     for (n, count) in data {
         if n == 0 {
@@ -17,38 +25,18 @@ pub fn blink(map: &mut HashMap<usize, usize>) {
 }
 
 pub fn part_1(input: &str) -> usize {
-    let numbers: Vec<usize> = input
-        .split_ascii_whitespace()
-        .map(|s| s.parse().unwrap())
-        .collect();
-
-    let mut map = HashMap::new();
-    for number in numbers {
-        *map.entry(number).or_insert(0) += 1;
-    }
-
+    let mut map = parse_input(input);
     for _ in 0..25 {
         blink(&mut map);
     }
-
     map.values().sum()
 }
 
 pub fn part_2(input: &str) -> usize {
-    let numbers: Vec<usize> = input
-        .split_ascii_whitespace()
-        .map(|s| s.parse().unwrap())
-        .collect();
-
-    let mut map = HashMap::new();
-    for number in numbers {
-        *map.entry(number).or_insert(0) += 1;
-    }
-
+    let mut map = parse_input(input);
     for _ in 0..75 {
         blink(&mut map);
     }
-
     map.values().sum()
 }
 
