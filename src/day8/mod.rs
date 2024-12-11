@@ -19,8 +19,7 @@ pub fn part_1(input: &str) -> u32 {
     for points in map.values() {
         for i in 0..points.len() {
             let a = points[i];
-            for j in i + 1..points.len() {
-                let b = points[j];
+            for &b in points.iter().skip(i + 1) {
                 let dist = b - a;
                 let before = a - dist;
                 let after = b + dist;
@@ -55,8 +54,7 @@ pub fn part_2(input: &str) -> u32 {
     for points in map.values() {
         for i in 0..points.len() {
             let a = points[i];
-            for j in i + 1..points.len() {
-                let b = points[j];
+            for &b in points.iter().skip(i + 1) {
                 let dist = b - a;
 
                 let mut before = a;

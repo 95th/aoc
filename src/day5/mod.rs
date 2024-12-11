@@ -4,7 +4,7 @@ fn parse_input(input: &str) -> (HashMap<i32, HashSet<i32>>, Vec<Vec<i32>>) {
     let mut lines = input.lines();
 
     let mut rules = HashMap::new();
-    while let Some(line) = lines.next() {
+    for line in lines.by_ref() {
         if line.is_empty() {
             break;
         }
@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> (HashMap<i32, HashSet<i32>>, Vec<Vec<i32>>) {
     }
 
     let mut orderings = Vec::<Vec<i32>>::new();
-    while let Some(line) = lines.next() {
+    for line in lines {
         orderings.push(line.split(",").map(|x| x.parse().unwrap()).collect());
     }
     (rules, orderings)

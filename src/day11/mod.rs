@@ -9,7 +9,7 @@ fn parse_input(input: &str) -> HashMap<usize, usize> {
 }
 
 fn blink(map: &mut HashMap<usize, usize>) {
-    let data = std::mem::replace(map, HashMap::new());
+    let data = std::mem::take(map);
     for (n, count) in data {
         if n == 0 {
             *map.entry(1).or_insert(0) += count;

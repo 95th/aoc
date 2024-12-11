@@ -150,7 +150,7 @@ impl<T> Matrix<T> {
 
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Point> {
         for (i, row) in self.data.iter().enumerate() {
-            if let Some(j) = row.iter().position(|cell| filter(cell)) {
+            if let Some(j) = row.iter().position(&filter) {
                 return Some(Point(i as i32, j as i32));
             }
         }

@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 fn parse_input(input: &str) -> impl Iterator<Item = Vec<i32>> + '_ {
     input.lines().map(|line| {
         line.split_ascii_whitespace()
@@ -14,10 +16,10 @@ fn is_safe(levels: &[i32]) -> bool {
         if diff.abs() < 1 || diff.abs() > 3 {
             return false;
         }
-        if diff > 0 {
-            increasing += 1;
-        } else if diff < 0 {
-            decreasing += 1;
+        match diff.cmp(&0) {
+            Ordering::Greater => increasing += 1,
+            Ordering::Less => decreasing += 1,
+            Ordering::Equal => (),
         }
     }
     increasing == levels.len() - 1 || decreasing == levels.len() - 1
