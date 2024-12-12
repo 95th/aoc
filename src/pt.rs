@@ -10,10 +10,10 @@ impl Pt {
 }
 
 impl std::ops::Add<Dist> for Pt {
-    type Output = Pt;
+    type Output = Self;
 
     fn add(self, Dist(i, j): Dist) -> Self::Output {
-        Pt(self.0 + i, self.1 + j)
+        Self(self.0 + i, self.1 + j)
     }
 }
 
@@ -24,19 +24,19 @@ impl std::ops::AddAssign<Dist> for Pt {
     }
 }
 
-impl std::ops::Sub<Pt> for Pt {
+impl std::ops::Sub<Self> for Pt {
     type Output = Dist;
 
-    fn sub(self, Pt(i, j): Pt) -> Self::Output {
+    fn sub(self, Self(i, j): Self) -> Self::Output {
         Dist(self.0 - i, self.1 - j)
     }
 }
 
 impl std::ops::Sub<Dist> for Pt {
-    type Output = Pt;
+    type Output = Self;
 
     fn sub(self, Dist(i, j): Dist) -> Self::Output {
-        Pt(self.0 - i, self.1 - j)
+        Self(self.0 - i, self.1 - j)
     }
 }
 
