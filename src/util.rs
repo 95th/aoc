@@ -1,5 +1,4 @@
 use std::{
-    fmt::Debug,
     ops::{Index, IndexMut},
     str::FromStr,
 };
@@ -18,7 +17,7 @@ impl Direction {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Point(pub i32, pub i32);
 
 impl Point {
@@ -29,6 +28,12 @@ impl Point {
             Direction::Left => Point(self.0, self.1 - 1),
             Direction::Right => Point(self.0, self.1 + 1),
         }
+    }
+}
+
+impl std::fmt::Debug for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.0, self.1)
     }
 }
 
@@ -156,6 +161,13 @@ impl<T> Matrix<T> {
         }
 
         None
+    }
+
+    pub fn neighbors(&self, point: Point) -> impl Iterator<Item = Point> + '_ {
+        Direction::all()
+            .into_iter()
+            .map(move |dir| point.step(dir))
+            .filter(move |&p| self.has_point(p))
     }
 }
 
