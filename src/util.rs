@@ -12,8 +12,8 @@ pub enum Direction {
 }
 
 impl Direction {
-    pub fn all() -> [Self; 4] {
-        [Self::Up, Self::Down, Self::Left, Self::Right]
+    pub fn all() -> impl Iterator<Item = Self> {
+        [Self::Up, Self::Down, Self::Left, Self::Right].into_iter()
     }
 }
 
@@ -111,7 +111,7 @@ impl<T: FromStr> Matrix<T> {
 
 impl<T> Matrix<T> {
     pub fn replace(&mut self, point: Point, mut value: T) -> Option<T> {
-        if self.has_point(point) {
+        if self.contains_point(point) {
             std::mem::swap(&mut self[point], &mut value);
             Some(value)
         } else {
@@ -133,7 +133,7 @@ impl<T> Matrix<T> {
         self.data[0].len()
     }
 
-    pub fn iter_points(&self) -> impl Iterator<Item = Point> {
+    pub fn points(&self) -> impl Iterator<Item = Point> {
         let rows = self.rows() as i32;
         let cols = self.cols() as i32;
         (0..rows).flat_map(move |i| (0..cols).map(move |j| Point(i, j)))
@@ -149,7 +149,7 @@ impl<T> Matrix<T> {
             .and_then(|row| row.get(j as usize))
     }
 
-    pub fn has_point(&self, Point(i, j): Point) -> bool {
+    pub fn contains_point(&self, Point(i, j): Point) -> bool {
         i >= 0 && j >= 0 && i < self.rows() as i32 && j < self.cols() as i32
     }
 
@@ -165,9 +165,8 @@ impl<T> Matrix<T> {
 
     pub fn neighbors(&self, point: Point) -> impl Iterator<Item = Point> + '_ {
         Direction::all()
-            .into_iter()
             .map(move |dir| point.step(dir))
-            .filter(move |&p| self.has_point(p))
+            .filter(move |&p| self.contains_point(p))
     }
 }
 

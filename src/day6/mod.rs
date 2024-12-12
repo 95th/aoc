@@ -24,7 +24,7 @@ pub fn part_1(input: &str) -> usize {
     let mut steps = grid.map(false);
     let mut count = 0;
 
-    while grid.has_point(current) {
+    while grid.contains_point(current) {
         if !steps[current] {
             steps[current] = true;
             count += 1;
@@ -43,7 +43,7 @@ pub fn is_loop(grid: &Matrix<u8>, start: Point) -> bool {
     let mut steps = grid.map([false; 4]);
 
     let mut current = start;
-    while grid.has_point(current) {
+    while grid.contains_point(current) {
         if steps[current][dir as usize] {
             return true;
         }
@@ -65,7 +65,7 @@ pub fn part_2(input: &str) -> usize {
     let start = guard_position(&grid);
 
     let mut count = 0;
-    for point in grid.iter_points() {
+    for point in grid.points() {
         if point == start || grid[point] == b'#' {
             continue;
         }

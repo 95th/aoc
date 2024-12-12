@@ -6,7 +6,7 @@ fn get_regions(grid: &Matrix<u8>) -> Vec<HashSet<Point>> {
     let mut done = HashSet::new();
     let mut regions = Vec::new();
 
-    for point in grid.iter_points() {
+    for point in grid.points() {
         if done.contains(&point) {
             continue;
         }

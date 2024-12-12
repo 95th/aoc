@@ -13,7 +13,7 @@ fn find_trail(
         return 1;
     }
 
-    Direction::all().into_iter().fold(0, |count, dir| {
+    Direction::all().fold(0, |count, dir| {
         let point = point.step(dir);
         if grid.get(point) == Some(&value) {
             count + find_trail(grid, point, value + 1, destinations)
@@ -29,7 +29,7 @@ pub fn part_1(input: &str) -> usize {
     let mut sum = 0;
     let destinations = &mut HashSet::new();
 
-    for point in grid.iter_points() {
+    for point in grid.points() {
         if grid[point] == b'0' {
             find_trail(&grid, point, b'1', destinations);
             sum += destinations.len();
@@ -46,7 +46,7 @@ pub fn part_2(input: &str) -> usize {
     let mut sum = 0;
     let destinations = &mut HashSet::new();
 
-    for point in grid.iter_points() {
+    for point in grid.points() {
         if grid[point] == b'0' {
             sum += find_trail(&grid, point, b'1', destinations);
             destinations.clear();

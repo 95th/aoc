@@ -7,7 +7,7 @@ pub fn part_1(input: &str) -> u32 {
 
     let mut map = HashMap::new();
 
-    for point in grid.iter_points() {
+    for point in grid.points() {
         if grid[point] != b'.' {
             map.entry(grid[point]).or_insert_with(Vec::new).push(point);
         }
@@ -42,7 +42,7 @@ pub fn part_2(input: &str) -> u32 {
 
     let mut map = HashMap::new();
 
-    for point in grid.iter_points() {
+    for point in grid.points() {
         if grid[point] != b'.' {
             map.entry(grid[point]).or_insert_with(Vec::new).push(point);
         }
