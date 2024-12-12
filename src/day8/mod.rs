@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 
-use crate::util::Matrix;
+use crate::util::Grid;
 
 pub fn part_1(input: &str) -> u32 {
-    let grid = Matrix::from_bytes(input);
-
+    let grid = Grid::from_bytes(input);
     let mut map = HashMap::new();
 
     for point in grid.points() {
@@ -38,7 +37,7 @@ pub fn part_1(input: &str) -> u32 {
 }
 
 pub fn part_2(input: &str) -> u32 {
-    let grid = Matrix::from_bytes(input);
+    let grid = Grid::from_bytes(input);
 
     let mut map = HashMap::new();
 

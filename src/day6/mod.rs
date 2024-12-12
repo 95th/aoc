@@ -1,22 +1,22 @@
-use crate::util::{Direction, Matrix, Point};
+use crate::util::{Dir, Grid, Pt};
 
-fn direction(guard: u8) -> Direction {
+fn direction(guard: u8) -> Dir {
     match guard {
-        b'^' => Direction::Up,
-        b'v' => Direction::Down,
-        b'<' => Direction::Left,
-        b'>' => Direction::Right,
+        b'^' => Dir::Up,
+        b'v' => Dir::Down,
+        b'<' => Dir::Left,
+        b'>' => Dir::Right,
         _ => unreachable!(),
     }
 }
 
-fn guard_position(grid: &Matrix<u8>) -> Point {
+fn guard_position(grid: &Grid<u8>) -> Pt {
     grid.find(|c| matches!(c, b'^' | b'v' | b'<' | b'>'))
         .unwrap()
 }
 
 pub fn part_1(input: &str) -> usize {
-    let grid = Matrix::from_bytes(input);
+    let grid = Grid::from_bytes(input);
     let start = guard_position(&grid);
     let mut dir = direction(grid[start]);
 
@@ -38,7 +38,7 @@ pub fn part_1(input: &str) -> usize {
     count
 }
 
-pub fn is_loop(grid: &Matrix<u8>, start: Point) -> bool {
+pub fn is_loop(grid: &Grid<u8>, start: Pt) -> bool {
     let mut dir = direction(grid[start]);
     let mut steps = grid.map([false; 4]);
 
@@ -61,7 +61,7 @@ pub fn is_loop(grid: &Matrix<u8>, start: Point) -> bool {
 }
 
 pub fn part_2(input: &str) -> usize {
-    let mut grid = Matrix::from_bytes(input);
+    let mut grid = Grid::from_bytes(input);
     let start = guard_position(&grid);
 
     let mut count = 0;

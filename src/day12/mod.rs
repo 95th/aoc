@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
-use crate::util::{Direction, Matrix, Point};
+use crate::util::{Dir, Grid, Pt};
 
-fn get_regions(grid: &Matrix<u8>) -> Vec<HashSet<Point>> {
+fn get_regions(grid: &Grid<u8>) -> Vec<HashSet<Pt>> {
     let mut done = HashSet::new();
     let mut regions = Vec::new();
 
@@ -31,7 +31,7 @@ fn get_regions(grid: &Matrix<u8>) -> Vec<HashSet<Point>> {
 }
 
 pub fn part_1(input: &str) -> usize {
-    let grid = Matrix::from_bytes(input);
+    let grid = Grid::from_bytes(input);
     let regions = get_regions(&grid);
 
     let mut total = 0;
@@ -47,7 +47,7 @@ pub fn part_1(input: &str) -> usize {
 }
 
 pub fn part_2(input: &str) -> usize {
-    let grid = Matrix::from_bytes(input);
+    let grid = Grid::from_bytes(input);
     let regions = get_regions(&grid);
 
     let mut total = 0;
@@ -59,9 +59,9 @@ pub fn part_2(input: &str) -> usize {
     total
 }
 
-fn find_sides(region: &HashSet<Point>) -> usize {
+fn find_sides(region: &HashSet<Pt>) -> usize {
     let mut count = 0;
-    for dir in Direction::all() {
+    for dir in Dir::all() {
         let mut done = HashSet::new();
         let left = dir.turn_left();
         let right = dir.turn_right();

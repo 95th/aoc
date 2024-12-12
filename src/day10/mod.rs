@@ -1,19 +1,14 @@
 use std::collections::HashSet;
 
-use crate::util::{Direction, Matrix, Point};
+use crate::util::{Dir, Grid, Pt};
 
-fn find_trail(
-    grid: &Matrix<u8>,
-    point: Point,
-    value: u8,
-    destinations: &mut HashSet<Point>,
-) -> usize {
+fn find_trail(grid: &Grid<u8>, point: Pt, value: u8, destinations: &mut HashSet<Pt>) -> usize {
     if let Some(b'9') = grid.get(point) {
         destinations.insert(point);
         return 1;
     }
 
-    Direction::all().fold(0, |count, dir| {
+    Dir::all().fold(0, |count, dir| {
         let point = point.step(dir);
         if grid.get(point) == Some(&value) {
             count + find_trail(grid, point, value + 1, destinations)
@@ -24,7 +19,7 @@ fn find_trail(
 }
 
 pub fn part_1(input: &str) -> usize {
-    let grid = Matrix::from_bytes(input);
+    let grid = Grid::from_bytes(input);
 
     let mut sum = 0;
     let destinations = &mut HashSet::new();
@@ -41,7 +36,7 @@ pub fn part_1(input: &str) -> usize {
 }
 
 pub fn part_2(input: &str) -> usize {
-    let grid = Matrix::from_bytes(input);
+    let grid = Grid::from_bytes(input);
 
     let mut sum = 0;
     let destinations = &mut HashSet::new();
