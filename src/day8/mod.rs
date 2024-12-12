@@ -23,10 +23,10 @@ pub fn part_1(input: &str) -> u32 {
                 let before = a - dist;
                 let after = b + dist;
 
-                if let Some(false) = antinodes.replace(before, true) {
+                if antinodes.replace(before, true) == Some(false) {
                     count += 1;
                 }
-                if let Some(false) = antinodes.replace(after, true) {
+                if antinodes.replace(after, true) == Some(false) {
                     count += 1;
                 }
             }
