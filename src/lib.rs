@@ -1,3 +1,5 @@
+#![warn(clippy::missing_const_for_fn)]
+
 pub mod day1;
 pub mod day2;
 pub mod day3;

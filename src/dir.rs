@@ -13,7 +13,7 @@ impl Dir {
         [Self::Up, Self::Down, Self::Left, Self::Right].into_iter()
     }
 
-    pub fn turn_left(self) -> Self {
+    pub const fn turn_left(self) -> Self {
         match self {
             Self::Up => Self::Left,
             Self::Left => Self::Down,
@@ -22,7 +22,7 @@ impl Dir {
         }
     }
 
-    pub fn turn_right(self) -> Self {
+    pub const fn turn_right(self) -> Self {
         match self {
             Self::Up => Self::Right,
             Self::Right => Self::Down,
@@ -31,7 +31,7 @@ impl Dir {
         }
     }
 
-    pub fn into_distance(self) -> Dist {
+    pub const fn into_distance(self) -> Dist {
         match self {
             Self::Up => Dist(-1, 0),
             Self::Down => Dist(1, 0),
