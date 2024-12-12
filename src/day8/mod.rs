@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::util::Grid;
+use crate::grid::Grid;
 
 pub fn part_1(input: &str) -> u32 {
     let grid = Grid::from_bytes(input);

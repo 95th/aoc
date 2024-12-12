@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::util::{Dir, Grid, Pt};
+use crate::{dir::Dir, grid::Grid, pt::Pt};
 
 fn get_regions(grid: &Grid<u8>) -> Vec<HashSet<Pt>> {
     let mut done = HashSet::new();

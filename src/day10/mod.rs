@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::util::{Dir, Grid, Pt};
+use crate::{dir::Dir, grid::Grid, pt::Pt};
 
 fn find_trail(grid: &Grid<u8>, point: Pt, value: u8, destinations: &mut HashSet<Pt>) -> usize {
     if let Some(b'9') = grid.get(point) {

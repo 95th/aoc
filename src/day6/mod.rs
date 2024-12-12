@@ -1,4 +1,4 @@
-use crate::util::{Dir, Grid, Pt};
+use crate::{dir::Dir, grid::Grid, pt::Pt};
 
 fn direction(guard: u8) -> Dir {
     match guard {

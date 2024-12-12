@@ -25,4 +25,7 @@ pub mod day12;
 // pub mod day24;
 // pub mod day25;
 
-pub mod util;
+pub mod dir;
+pub mod dist;
+pub mod grid;
+pub mod pt;
