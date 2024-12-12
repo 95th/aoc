@@ -12,7 +12,7 @@ pub struct Grid<T> {
 impl Grid<u8> {
     pub fn from_bytes(str: &str) -> Self {
         Self {
-            data: str.lines().map(|line| line.bytes().collect()).collect(),
+            data: str.lines().map(|line| line.as_bytes().to_vec()).collect(),
         }
     }
 }
