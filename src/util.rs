@@ -15,19 +15,41 @@ impl Direction {
     pub fn all() -> impl Iterator<Item = Self> {
         [Self::Up, Self::Down, Self::Left, Self::Right].into_iter()
     }
+
+    pub fn turn_left(self) -> Self {
+        match self {
+            Self::Up => Self::Left,
+            Self::Left => Self::Down,
+            Self::Down => Self::Right,
+            Self::Right => Self::Up,
+        }
+    }
+
+    pub fn turn_right(self) -> Self {
+        match self {
+            Self::Up => Self::Right,
+            Self::Right => Self::Down,
+            Self::Down => Self::Left,
+            Self::Left => Self::Up,
+        }
+    }
+
+    pub fn into_distance(self) -> Distance {
+        match self {
+            Self::Up => Distance(-1, 0),
+            Self::Down => Distance(1, 0),
+            Self::Left => Distance(0, -1),
+            Self::Right => Distance(0, 1),
+        }
+    }
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Point(pub i32, pub i32);
 
 impl Point {
-    pub fn step(&self, dir: Direction) -> Self {
-        match dir {
-            Direction::Up => Point(self.0 - 1, self.1),
-            Direction::Down => Point(self.0 + 1, self.1),
-            Direction::Left => Point(self.0, self.1 - 1),
-            Direction::Right => Point(self.0, self.1 + 1),
-        }
+    pub fn step(self, dir: Direction) -> Self {
+        self + dir.into_distance()
     }
 }
 
@@ -183,25 +205,5 @@ impl<T> IndexMut<Point> for Matrix<T> {
     fn index_mut(&mut self, Point(i, j): Point) -> &mut Self::Output {
         assert!(i >= 0 && j >= 0);
         &mut self.data[i as usize][j as usize]
-    }
-}
-
-impl Direction {
-    pub fn turn_left(&self) -> Self {
-        match self {
-            Self::Up => Self::Left,
-            Self::Left => Self::Down,
-            Self::Down => Self::Right,
-            Self::Right => Self::Up,
-        }
-    }
-
-    pub fn turn_right(&self) -> Self {
-        match self {
-            Self::Up => Self::Right,
-            Self::Right => Self::Down,
-            Self::Down => Self::Left,
-            Self::Left => Self::Up,
-        }
     }
 }
