@@ -14,7 +14,7 @@ struct Machine {
 impl Machine {
     fn parse(input: &str) -> Vec<Self> {
         let regex = regex::RegexBuilder::new(
-            r"Button A: X\+(\d+), Y\+(\d+).*?Button B: X\+(\d+), Y\+(\d+).*?Prize: X=(\d+), Y=(\d+)",
+            r"Button A: X\+(\d+), Y\+(\d+)\nButton B: X\+(\d+), Y\+(\d+)\nPrize: X=(\d+), Y=(\d+)",
         )
         .dot_matches_new_line(true)
         .build()
