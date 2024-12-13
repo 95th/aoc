@@ -55,10 +55,10 @@ impl<T> Grid<T> {
     pub fn points(&self) -> impl Iterator<Item = Pt> {
         let rows = self.rows() as i32;
         let cols = self.cols() as i32;
-        (0..rows).flat_map(move |i| (0..cols).map(move |j| Pt(i, j)))
+        (0..rows).flat_map(move |i| (0..cols).map(move |j| Pt { i, j }))
     }
 
-    pub fn get(&self, Pt(i, j): Pt) -> Option<&T> {
+    pub fn get(&self, Pt { i, j }: Pt) -> Option<&T> {
         if i < 0 || j < 0 {
             return None;
         }
@@ -68,14 +68,14 @@ impl<T> Grid<T> {
             .and_then(|row| row.get(j as usize))
     }
 
-    pub fn contains_point(&self, Pt(i, j): Pt) -> bool {
+    pub fn contains_point(&self, Pt { i, j }: Pt) -> bool {
         i >= 0 && j >= 0 && i < self.rows() as i32 && j < self.cols() as i32
     }
 
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Pt> {
         for (i, row) in self.data.iter().enumerate() {
             if let Some(j) = row.iter().position(&filter) {
-                return Some(Pt(i as i32, j as i32));
+                return Some(Pt::new(i as i32, j as i32));
             }
         }
 
@@ -92,14 +92,14 @@ impl<T> Grid<T> {
 impl<T> Index<Pt> for Grid<T> {
     type Output = T;
 
-    fn index(&self, Pt(i, j): Pt) -> &Self::Output {
+    fn index(&self, Pt { i, j }: Pt) -> &Self::Output {
         assert!(i >= 0 && j >= 0);
         &self.data[i as usize][j as usize]
     }
 }
 
 impl<T> IndexMut<Pt> for Grid<T> {
-    fn index_mut(&mut self, Pt(i, j): Pt) -> &mut Self::Output {
+    fn index_mut(&mut self, Pt { i, j }: Pt) -> &mut Self::Output {
         assert!(i >= 0 && j >= 0);
         &mut self.data[i as usize][j as usize]
     }

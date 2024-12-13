@@ -33,10 +33,10 @@ impl Dir {
 
     pub const fn into_distance(self) -> Dist {
         match self {
-            Self::Up => Dist(-1, 0),
-            Self::Down => Dist(1, 0),
-            Self::Left => Dist(0, -1),
-            Self::Right => Dist(0, 1),
+            Self::Up => Dist::new(-1, 0),
+            Self::Down => Dist::new(1, 0),
+            Self::Left => Dist::new(0, -1),
+            Self::Right => Dist::new(0, 1),
         }
     }
 }
