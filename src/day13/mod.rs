@@ -11,36 +11,37 @@ struct Machine {
     prize: Pt,
 }
 
-fn parse_button(line: &str) -> Pt {
-    let regex = regex::Regex::new(r"X([+-]\d+), Y([+-]\d+)").unwrap();
-    let caps = regex.captures(line).unwrap();
-    Pt {
-        x: caps[1].parse().unwrap(),
-        y: caps[2].parse().unwrap(),
+impl Machine {
+    fn parse(input: &str) -> Vec<Self> {
+        let regex = regex::RegexBuilder::new(
+            r"Button A: X\+(\d+), Y\+(\d+).*?Button B: X\+(\d+), Y\+(\d+).*?Prize: X=(\d+), Y=(\d+)",
+        )
+        .dot_matches_new_line(true)
+        .build()
+        .unwrap();
+        regex
+            .captures_iter(input)
+            .map(|caps| {
+                let button_a = Pt {
+                    x: caps[1].parse().unwrap(),
+                    y: caps[2].parse().unwrap(),
+                };
+                let button_b = Pt {
+                    x: caps[3].parse().unwrap(),
+                    y: caps[4].parse().unwrap(),
+                };
+                let prize = Pt {
+                    x: caps[5].parse().unwrap(),
+                    y: caps[6].parse().unwrap(),
+                };
+                Machine {
+                    a: button_a,
+                    b: button_b,
+                    prize,
+                }
+            })
+            .collect()
     }
-}
-
-fn parse_prize(line: &str) -> Pt {
-    let regex = regex::Regex::new(r"X=(\d+), Y=(\d+)").unwrap();
-    let caps = regex.captures(line).unwrap();
-    Pt {
-        x: caps[1].parse().unwrap(),
-        y: caps[2].parse().unwrap(),
-    }
-}
-
-fn parse_input(input: &str) -> impl Iterator<Item = Machine> + '_ {
-    input.split("\n\n").map(|group| {
-        let mut lines = group.lines();
-        let button_a = parse_button(lines.next().unwrap());
-        let button_b = parse_button(lines.next().unwrap());
-        let prize = parse_prize(lines.next().unwrap());
-        Machine {
-            a: button_a,
-            b: button_b,
-            prize,
-        }
-    })
 }
 
 fn find_min_tokens(machine: Machine) -> usize {
@@ -55,7 +56,7 @@ fn find_min_tokens(machine: Machine) -> usize {
 
 pub fn part_1(input: &str) -> usize {
     let mut total = 0;
-    for machine in parse_input(input) {
+    for machine in Machine::parse(input) {
         total += find_min_tokens(machine);
     }
     total
@@ -63,7 +64,7 @@ pub fn part_1(input: &str) -> usize {
 
 pub fn part_2(input: &str) -> usize {
     let mut total = 0;
-    for mut machine in parse_input(input) {
+    for mut machine in Machine::parse(input) {
         machine.prize.x += 10000000000000.0;
         machine.prize.y += 10000000000000.0;
         total += find_min_tokens(machine);
