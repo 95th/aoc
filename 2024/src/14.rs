@@ -1,7 +1,7 @@
 use std::io::Write;
 use std::{fs::File, io::BufWriter};
 
-use aoc_util::{Dist, Grid, Pt};
+use aoc_util::{Dist, Grid, Pos};
 
 fn main() {
     let input = include_str!("../input/14.txt");
@@ -9,7 +9,7 @@ fn main() {
     part_2(input, 101, 103);
 }
 
-fn parse_input(input: &str) -> Vec<(Pt, Dist)> {
+fn parse_input(input: &str) -> Vec<(Pos, Dist)> {
     let regex = regex::Regex::new(r"p=(\d+),(\d+) v=(-?\d+),(-?\d+)").unwrap();
     regex
         .captures_iter(input)
@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> Vec<(Pt, Dist)> {
             let y = cap[2].parse().unwrap();
             let vx = cap[3].parse().unwrap();
             let vy = cap[4].parse().unwrap();
-            (Pt::new(x, y), Dist::new(vx, vy))
+            (Pos::new(x, y), Dist::new(vx, vy))
         })
         .collect()
 }
@@ -28,8 +28,8 @@ fn part_1(input: &str, width: i32, height: i32) -> usize {
 
     for _ in 0..100 {
         for (pos, velocity) in &mut robots {
-            pos.i = (pos.i + velocity.i + width) % width;
-            pos.j = (pos.j + velocity.j + height) % height;
+            pos.x = (pos.x + velocity.x + width) % width;
+            pos.y = (pos.y + velocity.y + height) % height;
         }
     }
 
@@ -38,13 +38,13 @@ fn part_1(input: &str, width: i32, height: i32) -> usize {
     let mut quad = [0, 0, 0, 0];
 
     for (pos, _) in robots {
-        if pos.i < mid_x && pos.j < mid_y {
+        if pos.x < mid_x && pos.y < mid_y {
             quad[0] += 1;
-        } else if pos.i < mid_x && pos.j > mid_y {
+        } else if pos.x < mid_x && pos.y > mid_y {
             quad[1] += 1;
-        } else if pos.i > mid_x && pos.j < mid_y {
+        } else if pos.x > mid_x && pos.y < mid_y {
             quad[2] += 1;
-        } else if pos.i > mid_x && pos.j > mid_y {
+        } else if pos.x > mid_x && pos.y > mid_y {
             quad[3] += 1;
         }
     }
@@ -57,11 +57,11 @@ fn part_2(input: &str, width: i32, height: i32) {
     let mut file = BufWriter::new(File::create("output.txt").unwrap());
     for i in 0..10000 {
         for (pos, velocity) in &mut robots {
-            pos.i = (pos.i + velocity.i + width) % width;
-            pos.j = (pos.j + velocity.j + height) % height;
+            pos.x = (pos.x + velocity.x + width) % width;
+            pos.y = (pos.y + velocity.y + height) % height;
         }
 
-        let mut grid = Grid::new(height as usize, width as usize, ' ');
+        let mut grid = Grid::new(width as usize, height as usize, ' ');
         for (pos, _) in &robots {
             grid[*pos] = '#';
         }
