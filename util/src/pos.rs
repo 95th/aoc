@@ -12,7 +12,7 @@ impl Pos {
     }
 
     pub fn step(self, dir: Dir) -> Self {
-        self + dir.into_distance()
+        self + dir.unit_vector()
     }
 }
 

@@ -31,7 +31,7 @@ impl Dir {
         }
     }
 
-    pub const fn into_distance(self) -> Dist {
+    pub const fn unit_vector(self) -> Dist {
         match self {
             Self::Up => Dist::new(0, -1),
             Self::Down => Dist::new(0, 1),
