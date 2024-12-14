@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Write;
 
-use common::{Dist, Grid, Pt};
+use aoc_util::{Dist, Grid, Pt};
 
 fn main() {
     let input = include_str!("../input/14.txt");

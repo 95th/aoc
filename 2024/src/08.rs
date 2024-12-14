@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use common::Grid;
+use aoc_util::Grid;
 
 fn main() {
     let input = include_str!("../input/08.txt");

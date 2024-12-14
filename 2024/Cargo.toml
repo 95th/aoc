@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 regex = "1.11.1"
-common = { path = "../common" }
+aoc_util = { path = "../util" }
 
 [[bin]]
 name = "01"

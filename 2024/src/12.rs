@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use common::{Dir, Grid, Pt};
+use aoc_util::{Dir, Grid, Pt};
 
 fn main() {
     let input = include_str!("../input/12.txt");
