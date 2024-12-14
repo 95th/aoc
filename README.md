@@ -1,27 +1,17 @@
-```rust
-fn main() {
-    let input = include_str!("../input/<day>.txt");
-    println!("Part 1: {}", part_1(input));
-    println!("Part 2: {}", part_2(input));
-}
+Add scaffold for a day using `day.sh`:
 
-fn part_1(input: &str) -> i32 {
-    0
-}
+```sh
+./day.sh YEAR DAY
+```
 
-fn part_2(input: &str) -> i32 {
-    0
-}
+Unit testing:
 
-#[test]
-fn test_part_1() {
-    let data = r"";
-    assert_eq!(part_1(data), 0);
-}
+```
+cargo test -p aoc_2024 --bin 01
+```
 
-#[test]
-fn test_part_2() {
-    let data = r"";
-    assert_eq!(part_2(data), 0);
-}
+Run the solution:
+
+```
+cargo run --release -p aoc_2024 --bin 01
 ```
