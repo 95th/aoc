@@ -1,9 +1,7 @@
 mod dir;
-mod dist;
 mod grid;
-mod pos;
+mod vector;
 
 pub use dir::*;
-pub use dist::*;
 pub use grid::*;
-pub use pos::*;
+pub use vector::*;

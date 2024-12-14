@@ -1,4 +1,4 @@
-use aoc_util::{Dir, Grid, Pos};
+use aoc_util::{Dir, Grid, Vec2};
 
 fn main() {
     let input = include_str!("../input/06.txt");
@@ -16,7 +16,7 @@ fn direction(guard: u8) -> Dir {
     }
 }
 
-fn guard_position(grid: &Grid<u8>) -> Pos {
+fn guard_position(grid: &Grid<u8>) -> Vec2 {
     grid.find(|c| matches!(c, b'^' | b'v' | b'<' | b'>'))
         .unwrap()
 }
@@ -44,7 +44,7 @@ fn part_1(input: &str) -> usize {
     count
 }
 
-fn is_loop(grid: &Grid<u8>, start: Pos) -> bool {
+fn is_loop(grid: &Grid<u8>, start: Vec2) -> bool {
     let mut dir = direction(grid[start]);
     let mut steps = grid.map([false; 4]);
 

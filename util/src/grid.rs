@@ -3,7 +3,7 @@ use std::{
     str::FromStr,
 };
 
-use crate::{dir::Dir, pos::Pos};
+use crate::{Dir, Vec2};
 
 pub struct Grid<T> {
     pub data: Vec<Vec<T>>,
@@ -68,7 +68,7 @@ impl<T> Grid<T> {
         }
     }
 
-    pub fn replace(&mut self, point: Pos, mut value: T) -> Option<T> {
+    pub fn replace(&mut self, point: Vec2, mut value: T) -> Option<T> {
         if self.contains_point(point) {
             std::mem::swap(&mut self[point], &mut value);
             Some(value)
@@ -89,13 +89,13 @@ impl<T> Grid<T> {
         self.data[0].len()
     }
 
-    pub fn points(&self) -> impl Iterator<Item = Pos> {
+    pub fn points(&self) -> impl Iterator<Item = Vec2> {
         let rows = self.rows() as i32;
         let cols = self.cols() as i32;
-        (0..rows).flat_map(move |y| (0..cols).map(move |x| Pos { x, y }))
+        (0..rows).flat_map(move |y| (0..cols).map(move |x| Vec2 { x, y }))
     }
 
-    pub fn get(&self, Pos { x, y }: Pos) -> Option<&T> {
+    pub fn get(&self, Vec2 { x, y }: Vec2) -> Option<&T> {
         if x < 0 || y < 0 {
             return None;
         }
@@ -105,38 +105,38 @@ impl<T> Grid<T> {
             .and_then(|row| row.get(x as usize))
     }
 
-    pub fn contains_point(&self, Pos { x, y }: Pos) -> bool {
+    pub fn contains_point(&self, Vec2 { x, y }: Vec2) -> bool {
         x >= 0 && y >= 0 && y < self.rows() as i32 && x < self.cols() as i32
     }
 
-    pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Pos> {
+    pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Vec2> {
         for (y, row) in self.data.iter().enumerate() {
             if let Some(x) = row.iter().position(&filter) {
-                return Some(Pos::new(x as i32, y as i32));
+                return Some(Vec2::new(x as i32, y as i32));
             }
         }
 
         None
     }
 
-    pub fn neighbors(&self, point: Pos) -> impl Iterator<Item = Pos> + '_ {
+    pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
         Dir::all()
             .map(move |dir| point.step(dir))
             .filter(move |&p| self.contains_point(p))
     }
 }
 
-impl<T> Index<Pos> for Grid<T> {
+impl<T> Index<Vec2> for Grid<T> {
     type Output = T;
 
-    fn index(&self, Pos { x, y }: Pos) -> &Self::Output {
+    fn index(&self, Vec2 { x, y }: Vec2) -> &Self::Output {
         assert!(x >= 0 && y >= 0);
         &self.data[y as usize][x as usize]
     }
 }
 
-impl<T> IndexMut<Pos> for Grid<T> {
-    fn index_mut(&mut self, Pos { x, y }: Pos) -> &mut Self::Output {
+impl<T> IndexMut<Vec2> for Grid<T> {
+    fn index_mut(&mut self, Vec2 { x, y }: Vec2) -> &mut Self::Output {
         assert!(x >= 0 && y >= 0);
         &mut self.data[y as usize][x as usize]
     }

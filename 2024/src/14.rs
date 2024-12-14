@@ -1,7 +1,7 @@
 use std::io::Write;
 use std::{fs::File, io::BufWriter};
 
-use aoc_util::{Dist, Grid, Pos};
+use aoc_util::{Grid, Vec2};
 
 fn main() {
     let input = include_str!("../input/14.txt");
@@ -9,7 +9,7 @@ fn main() {
     part_2(input, 101, 103);
 }
 
-fn parse_input(input: &str) -> Vec<(Pos, Dist)> {
+fn parse_input(input: &str) -> Vec<(Vec2, Vec2)> {
     let regex = regex::Regex::new(r"p=(\d+),(\d+) v=(-?\d+),(-?\d+)").unwrap();
     regex
         .captures_iter(input)
@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> Vec<(Pos, Dist)> {
             let y = cap[2].parse().unwrap();
             let vx = cap[3].parse().unwrap();
             let vy = cap[4].parse().unwrap();
-            (Pos::new(x, y), Dist::new(vx, vy))
+            (Vec2::new(x, y), Vec2::new(vx, vy))
         })
         .collect()
 }

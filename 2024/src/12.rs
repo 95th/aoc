@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use aoc_util::{Dir, Grid, Pos};
+use aoc_util::{Dir, Grid, Vec2};
 
 fn main() {
     let input = include_str!("../input/12.txt");
@@ -8,7 +8,7 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-fn get_regions(grid: &Grid<u8>) -> Vec<HashSet<Pos>> {
+fn get_regions(grid: &Grid<u8>) -> Vec<HashSet<Vec2>> {
     let mut done = HashSet::new();
     let mut regions = Vec::new();
 
@@ -65,7 +65,7 @@ fn part_2(input: &str) -> usize {
     total
 }
 
-fn find_sides(region: &HashSet<Pos>) -> usize {
+fn find_sides(region: &HashSet<Vec2>) -> usize {
     let mut count = 0;
     for dir in Dir::all() {
         let mut done = HashSet::new();

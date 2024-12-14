@@ -1,4 +1,4 @@
-use crate::dist::Dist;
+use crate::Vec2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Dir {
@@ -31,12 +31,12 @@ impl Dir {
         }
     }
 
-    pub const fn unit_vector(self) -> Dist {
+    pub const fn unit_vector(self) -> Vec2 {
         match self {
-            Self::Up => Dist::new(0, -1),
-            Self::Down => Dist::new(0, 1),
-            Self::Left => Dist::new(-1, 0),
-            Self::Right => Dist::new(1, 0),
+            Self::Up => Vec2::new(0, -1),
+            Self::Down => Vec2::new(0, 1),
+            Self::Left => Vec2::new(-1, 0),
+            Self::Right => Vec2::new(1, 0),
         }
     }
 }
