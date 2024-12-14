@@ -5,16 +5,16 @@ fn main() {
 }
 
 #[derive(Debug)]
-struct Pt {
+struct Vec2f {
     x: f64,
     y: f64,
 }
 
 #[derive(Debug)]
 struct Machine {
-    a: Pt,
-    b: Pt,
-    prize: Pt,
+    a: Vec2f,
+    b: Vec2f,
+    prize: Vec2f,
 }
 
 impl Machine {
@@ -28,15 +28,15 @@ impl Machine {
         regex
             .captures_iter(input)
             .map(|caps| {
-                let button_a = Pt {
+                let button_a = Vec2f {
                     x: caps[1].parse().unwrap(),
                     y: caps[2].parse().unwrap(),
                 };
-                let button_b = Pt {
+                let button_b = Vec2f {
                     x: caps[3].parse().unwrap(),
                     y: caps[4].parse().unwrap(),
                 };
-                let prize = Pt {
+                let prize = Vec2f {
                     x: caps[5].parse().unwrap(),
                     y: caps[6].parse().unwrap(),
                 };
