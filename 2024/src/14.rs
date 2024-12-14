@@ -1,5 +1,5 @@
-use std::fs::File;
 use std::io::Write;
+use std::{fs::File, io::BufWriter};
 
 use aoc_util::{Dist, Grid, Pt};
 
@@ -54,7 +54,7 @@ fn part_1(input: &str, width: i32, height: i32) -> usize {
 
 fn part_2(input: &str, width: i32, height: i32) {
     let mut robots = parse_input(input);
-    let mut file = File::create("output.txt").unwrap();
+    let mut file = BufWriter::new(File::create("output.txt").unwrap());
     for i in 0..10000 {
         for (pos, velocity) in &mut robots {
             pos.i = (pos.i + velocity.i + width) % width;
@@ -66,7 +66,7 @@ fn part_2(input: &str, width: i32, height: i32) {
             grid[*pos] = '#';
         }
 
-        writeln!(&mut file, "Iteration: {}\n", i).unwrap();
+        writeln!(&mut file, "Iteration: {}\n", i + 1).unwrap();
         writeln!(&mut file, "{grid}").unwrap();
     }
 }
