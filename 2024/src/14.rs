@@ -56,13 +56,10 @@ fn part_2(input: &str, width: i32, height: i32) {
     let mut robots = parse_input(input);
     let mut file = BufWriter::new(File::create("output.txt").unwrap());
     for i in 0..10000 {
+        let mut grid = Grid::new(width as usize, height as usize, ' ');
         for (pos, velocity) in &mut robots {
             pos.x = (pos.x + velocity.x + width) % width;
             pos.y = (pos.y + velocity.y + height) % height;
-        }
-
-        let mut grid = Grid::new(width as usize, height as usize, ' ');
-        for (pos, _) in &robots {
             grid[*pos] = '#';
         }
 
