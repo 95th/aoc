@@ -12,11 +12,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "aoc_24"
+name = "aoc_2024"
 version = "0.1.0"
 dependencies = [
+ "common",
  "regex",
 ]
+
+[[package]]
+name = "common"
+version = "0.1.0"
 
 [[package]]
 name = "memchr"
