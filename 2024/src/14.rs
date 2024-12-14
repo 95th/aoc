@@ -28,9 +28,8 @@ fn part_1(input: &str, width: i32, height: i32) -> usize {
 
     for _ in 0..100 {
         for (pos, velocity) in &mut robots {
-            *pos += *velocity;
-            pos.i = (pos.i + width) % width;
-            pos.j = (pos.j + height) % height;
+            pos.i = (pos.i + velocity.i + width) % width;
+            pos.j = (pos.j + velocity.j + height) % height;
         }
     }
 
@@ -58,9 +57,8 @@ fn part_2(input: &str, width: i32, height: i32) {
     let mut file = File::create("output.txt").unwrap();
     for i in 0..10000 {
         for (pos, velocity) in &mut robots {
-            *pos += *velocity;
-            pos.i = (pos.i + width) % width;
-            pos.j = (pos.j + height) % height;
+            pos.i = (pos.i + velocity.i + width) % width;
+            pos.j = (pos.j + velocity.j + height) % height;
         }
 
         let mut grid = Grid::new(height as usize, width as usize, ' ');
