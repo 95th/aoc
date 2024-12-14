@@ -9,6 +9,36 @@ pub struct Grid<T> {
     pub data: Vec<Vec<T>>,
 }
 
+impl<T> std::fmt::Debug for Grid<T>
+where
+    T: std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for cols in self.data.iter() {
+            for cell in cols.iter() {
+                write!(f, "{:?} ", cell)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+
+impl<T> std::fmt::Display for Grid<T>
+where
+    T: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for cols in self.data.iter() {
+            for cell in cols.iter() {
+                write!(f, "{}", cell)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+
 impl Grid<u8> {
     pub fn from_bytes(str: &str) -> Self {
         Self {
@@ -29,6 +59,15 @@ impl<T: FromStr> Grid<T> {
 }
 
 impl<T> Grid<T> {
+    pub fn new(width: usize, height: usize, value: T) -> Grid<T>
+    where
+        T: Clone,
+    {
+        Grid {
+            data: vec![vec![value; width]; height],
+        }
+    }
+
     pub fn replace(&mut self, point: Pt, mut value: T) -> Option<T> {
         if self.contains_point(point) {
             std::mem::swap(&mut self[point], &mut value);
@@ -39,9 +78,7 @@ impl<T> Grid<T> {
     }
 
     pub fn map<U: Clone>(&self, value: U) -> Grid<U> {
-        Grid {
-            data: vec![vec![value; self.cols()]; self.rows()],
-        }
+        Grid::new(self.cols(), self.rows(), value)
     }
 
     pub fn rows(&self) -> usize {
