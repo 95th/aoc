@@ -29,10 +29,10 @@ fn part_1(input: &str) -> u32 {
                 let before = a - dist;
                 let after = b + dist;
 
-                if antinodes.replace(before, true) == Some(false) {
+                if let Some(false) = antinodes.replace(before, true) {
                     count += 1;
                 }
-                if antinodes.replace(after, true) == Some(false) {
+                if let Some(false) = antinodes.replace(after, true) {
                     count += 1;
                 }
             }
