@@ -1,4 +1,5 @@
 use std::{
+    mem,
     ops::{Index, IndexMut},
     str::FromStr,
 };
@@ -87,10 +88,9 @@ impl<T> Grid<T> {
         }
     }
 
-    pub fn replace(&mut self, point: Vec2, mut value: T) -> Option<T> {
+    pub fn replace(&mut self, point: Vec2, value: T) -> Option<T> {
         if self.has(point) {
-            std::mem::swap(&mut self[point], &mut value);
-            Some(value)
+            Some(mem::replace(&mut self[point], value))
         } else {
             None
         }
