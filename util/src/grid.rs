@@ -6,7 +6,8 @@ use std::{
 use crate::{Dir, Vec2};
 
 pub struct Grid<T> {
-    pub data: Vec<Vec<T>>,
+    data: Vec<T>,
+    cols: usize,
 }
 
 impl<T> std::fmt::Debug for Grid<T>
@@ -14,8 +15,8 @@ where
     T: std::fmt::Debug,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for cols in self.data.iter() {
-            for cell in cols.iter() {
+        for row in self.data.chunks_exact(self.cols) {
+            for cell in row {
                 write!(f, "{:?} ", cell)?;
             }
             writeln!(f)?;
@@ -29,8 +30,8 @@ where
     T: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for cols in self.data.iter() {
-            for cell in cols.iter() {
+        for row in self.data.chunks_exact(self.cols) {
+            for cell in row {
                 write!(f, "{}", cell)?;
             }
             writeln!(f)?;
@@ -41,20 +42,35 @@ where
 
 impl Grid<u8> {
     pub fn from_bytes(str: &str) -> Self {
-        Self {
-            data: str.lines().map(|line| line.as_bytes().to_vec()).collect(),
+        let mut data = vec![];
+        let mut cols = 0;
+        for line in str.lines() {
+            data.extend_from_slice(line.as_bytes());
+            if cols == 0 {
+                cols = line.len();
+            }
         }
+        assert_eq!(data.len() % cols, 0);
+        Self { data, cols }
     }
 }
 
 impl<T: FromStr> Grid<T> {
     pub fn parse(str: &str) -> Result<Self, T::Err> {
-        Ok(Self {
-            data: str
-                .lines()
-                .map(|line| line.split_whitespace().map(|s| s.parse()).collect())
-                .collect::<Result<Vec<Vec<_>>, _>>()?,
-        })
+        let mut data = vec![];
+        let mut cols = 0;
+
+        for line in str.lines() {
+            for value in line.split_whitespace() {
+                data.push(value.parse()?);
+            }
+            if cols == 0 {
+                cols = data.len();
+            }
+        }
+
+        assert_eq!(data.len() % cols, 0);
+        Ok(Self { data, cols })
     }
 }
 
@@ -64,7 +80,8 @@ impl<T> Grid<T> {
         T: Clone,
     {
         Grid {
-            data: vec![vec![value; width]; height],
+            data: vec![value; width * height],
+            cols: width,
         }
     }
 
@@ -85,16 +102,17 @@ impl<T> Grid<T> {
     where
         T: Clone,
     {
-        let temp = self[a].clone();
-        self[a] = std::mem::replace(&mut self[b], temp);
+        let i = self.to_index(a).unwrap();
+        let j = self.to_index(b).unwrap();
+        self.data.swap(i, j);
     }
 
     pub fn height(&self) -> usize {
-        self.data.len()
+        self.data.len() / self.cols
     }
 
     pub fn width(&self) -> usize {
-        self.data[0].len()
+        self.cols
     }
 
     pub fn points(&self) -> impl Iterator<Item = Vec2> {
@@ -103,14 +121,8 @@ impl<T> Grid<T> {
         (0..rows).flat_map(move |y| (0..cols).map(move |x| Vec2 { x, y }))
     }
 
-    pub fn get(&self, Vec2 { x, y }: Vec2) -> Option<&T> {
-        if x < 0 || y < 0 {
-            return None;
-        }
-
-        self.data
-            .get(y as usize)
-            .and_then(|row| row.get(x as usize))
+    pub fn get(&self, point: Vec2) -> Option<&T> {
+        self.to_index(point).and_then(|i| self.data.get(i))
     }
 
     pub fn contains_point(&self, Vec2 { x, y }: Vec2) -> bool {
@@ -118,13 +130,11 @@ impl<T> Grid<T> {
     }
 
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Vec2> {
-        for (y, row) in self.data.iter().enumerate() {
-            if let Some(x) = row.iter().position(&filter) {
-                return Some(Vec2::new(x as i32, y as i32));
-            }
-        }
-
-        None
+        let pos = self.data.iter().position(filter)?;
+        Some(Vec2 {
+            x: (pos % self.cols) as i32,
+            y: (pos / self.cols) as i32,
+        })
     }
 
     pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
@@ -132,20 +142,28 @@ impl<T> Grid<T> {
             .map(move |dir| point.step(dir))
             .filter(move |&p| self.contains_point(p))
     }
+
+    fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
+        if x >= 0 && y >= 0 {
+            Some(y as usize * self.cols + x as usize)
+        } else {
+            None
+        }
+    }
 }
 
 impl<T> Index<Vec2> for Grid<T> {
     type Output = T;
 
-    fn index(&self, Vec2 { x, y }: Vec2) -> &Self::Output {
-        assert!(x >= 0 && y >= 0);
-        &self.data[y as usize][x as usize]
+    fn index(&self, point: Vec2) -> &Self::Output {
+        let index = self.to_index(point).unwrap();
+        &self.data[index]
     }
 }
 
 impl<T> IndexMut<Vec2> for Grid<T> {
-    fn index_mut(&mut self, Vec2 { x, y }: Vec2) -> &mut Self::Output {
-        assert!(x >= 0 && y >= 0);
-        &mut self.data[y as usize][x as usize]
+    fn index_mut(&mut self, point: Vec2) -> &mut Self::Output {
+        let index = self.to_index(point).unwrap();
+        &mut self.data[index]
     }
 }
