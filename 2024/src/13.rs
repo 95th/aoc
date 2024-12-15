@@ -19,11 +19,9 @@ struct Machine {
 
 impl Machine {
     fn parse(input: &str) -> Vec<Self> {
-        let regex = regex::RegexBuilder::new(
+        let regex = regex::Regex::new(
             r"Button A: X\+(\d+), Y\+(\d+)\nButton B: X\+(\d+), Y\+(\d+)\nPrize: X=(\d+), Y=(\d+)",
         )
-        .dot_matches_new_line(true)
-        .build()
         .unwrap();
         regex
             .captures_iter(input)
