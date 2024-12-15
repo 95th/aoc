@@ -161,7 +161,7 @@ impl<T> Grid<T> {
     }
 
     fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
-        if x >= 0 && y >= 0 {
+        if x >= 0 && y >= 0 && x < self.width() as i32 {
             Some(y as usize * self.cols + x as usize)
         } else {
             None
