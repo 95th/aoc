@@ -23,28 +23,28 @@ fn part_1(input: &str) -> i32 {
     let mut pos = grid.find(|&c| c == b'@').unwrap();
 
     for dir in directions {
-        let try_pos = pos.step(dir);
+        let next_pos = pos.neighbor(dir);
 
-        match grid[try_pos] {
+        match grid[next_pos] {
             b'#' => {
                 // No movement
             }
             b'O' => {
-                let mut dot_pos = pos.step(dir);
+                let mut dot_pos = pos.neighbor(dir);
                 while grid.get(dot_pos) == Some(&b'O') {
-                    dot_pos = dot_pos.step(dir);
+                    dot_pos = dot_pos.neighbor(dir);
                 }
                 if grid.get(dot_pos) == Some(&b'.') {
                     grid[pos] = b'.';
                     grid[dot_pos] = b'O';
-                    grid[try_pos] = b'@';
-                    pos = try_pos;
+                    grid[next_pos] = b'@';
+                    pos = next_pos;
                 }
             }
             b'.' => {
                 grid[pos] = b'.';
-                grid[try_pos] = b'@';
-                pos = try_pos;
+                grid[next_pos] = b'@';
+                pos = next_pos;
             }
             _ => unreachable!("Invalid character"),
         }
@@ -70,11 +70,11 @@ fn widen_grid(grid: Grid<u8>) -> Grid<u8> {
             }
             b'O' => {
                 wide_grid[new_point] = b'[';
-                wide_grid[new_point.step(Dir::Right)] = b']';
+                wide_grid[new_point.neighbor(Dir::Right)] = b']';
             }
             b'#' => {
                 wide_grid[new_point] = b'#';
-                wide_grid[new_point.step(Dir::Right)] = b'#';
+                wide_grid[new_point.neighbor(Dir::Right)] = b'#';
             }
             b'.' => (),
             _ => unreachable!("Invalid character"),
@@ -89,60 +89,60 @@ fn part_2(input: &str) -> i32 {
     let mut pos = grid.find(|&c| c == b'@').unwrap();
 
     for dir in directions {
-        let try_pos = pos.step(dir);
+        let next_pos = pos.neighbor(dir);
 
-        match grid[try_pos] {
+        match grid[next_pos] {
             b'#' => {
                 // No movement
             }
             b'[' | b']' => match dir {
                 Dir::Left | Dir::Right => {
-                    let mut dot_pos = pos.step(dir);
+                    let mut dot_pos = pos.neighbor(dir);
                     while let Some(b'[' | b']') = grid.get(dot_pos) {
-                        dot_pos = dot_pos.step(dir);
+                        dot_pos = dot_pos.neighbor(dir);
                     }
                     if grid.get(dot_pos) == Some(&b'.') {
                         let mut a = dot_pos;
-                        let mut b = a.step(dir.inverse());
+                        let mut b = a.neighbor(dir.inverse());
                         while a != pos {
                             grid[a] = grid[b];
                             a = b;
-                            b = b.step(dir.inverse());
+                            b = b.neighbor(dir.inverse());
                         }
                         grid[pos] = b'.';
-                        grid[try_pos] = b'@';
-                        pos = try_pos;
+                        grid[next_pos] = b'@';
+                        pos = next_pos;
                     }
                 }
                 Dir::Up | Dir::Down => {
                     let mut layers = vec![];
                     let mut current_layer = HashSet::new();
-                    current_layer.insert(try_pos);
-                    if grid[try_pos] == b'[' {
-                        current_layer.insert(try_pos.step(Dir::Right));
+                    current_layer.insert(next_pos);
+                    if grid[next_pos] == b'[' {
+                        current_layer.insert(next_pos.neighbor(Dir::Right));
                     } else {
-                        current_layer.insert(try_pos.step(Dir::Left));
+                        current_layer.insert(next_pos.neighbor(Dir::Left));
                     }
 
                     let found = loop {
-                        if current_layer.iter().all(|&p| grid[p.step(dir)] == b'.') {
+                        if current_layer.iter().all(|&p| grid[p.neighbor(dir)] == b'.') {
                             layers.push(current_layer);
                             break true;
                         }
 
-                        if current_layer.iter().any(|&p| grid[p.step(dir)] == b'#') {
+                        if current_layer.iter().any(|&p| grid[p.neighbor(dir)] == b'#') {
                             break false;
                         }
 
                         let mut next_layer = HashSet::new();
                         for &p in current_layer.iter() {
-                            let p = p.step(dir);
+                            let p = p.neighbor(dir);
                             if grid[p] == b'[' {
                                 next_layer.insert(p);
-                                next_layer.insert(p.step(Dir::Right));
+                                next_layer.insert(p.neighbor(Dir::Right));
                             } else if grid[p] == b']' {
                                 next_layer.insert(p);
-                                next_layer.insert(p.step(Dir::Left));
+                                next_layer.insert(p.neighbor(Dir::Left));
                             }
                         }
                         layers.push(current_layer);
@@ -155,18 +155,18 @@ fn part_2(input: &str) -> i32 {
 
                     while let Some(layer) = layers.pop() {
                         for p in layer {
-                            grid.swap(p, p.step(dir));
+                            grid.swap(p, p.neighbor(dir));
                         }
                     }
                     grid[pos] = b'.';
-                    grid[try_pos] = b'@';
-                    pos = try_pos;
+                    grid[next_pos] = b'@';
+                    pos = next_pos;
                 }
             },
             b'.' => {
                 grid[pos] = b'.';
-                grid[try_pos] = b'@';
-                pos = try_pos;
+                grid[next_pos] = b'@';
+                pos = next_pos;
             }
             _ => unreachable!("Invalid character"),
         }

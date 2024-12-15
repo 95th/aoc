@@ -15,7 +15,7 @@ fn find_trail(grid: &Grid<u8>, point: Vec2, value: u8, destinations: &mut HashSe
     }
 
     Dir::all().fold(0, |count, dir| {
-        let point = point.step(dir);
+        let point = point.neighbor(dir);
         if grid.get(point) == Some(&value) {
             count + find_trail(grid, point, value + 1, destinations)
         } else {

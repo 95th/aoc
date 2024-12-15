@@ -76,19 +76,19 @@ fn find_sides(region: &HashSet<Vec2>) -> usize {
             if !done.insert(*p) {
                 continue;
             }
-            if region.contains(&p.step(dir)) {
+            if region.contains(&p.neighbor(dir)) {
                 continue;
             }
 
-            let mut point = p.step(left);
-            while region.contains(&point) && !region.contains(&point.step(dir)) {
+            let mut point = p.neighbor(left);
+            while region.contains(&point) && !region.contains(&point.neighbor(dir)) {
                 done.insert(point);
-                point = point.step(left);
+                point = point.neighbor(left);
             }
-            let mut point = p.step(right);
-            while region.contains(&point) && !region.contains(&point.step(dir)) {
+            let mut point = p.neighbor(right);
+            while region.contains(&point) && !region.contains(&point.neighbor(dir)) {
                 done.insert(point);
-                point = point.step(right);
+                point = point.neighbor(right);
             }
             count += 1;
         }

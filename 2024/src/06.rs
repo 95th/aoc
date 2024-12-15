@@ -25,10 +25,10 @@ fn part_1(input: &str) -> usize {
             steps[current] = true;
             count += 1;
         }
-        if grid.get(current.step(dir)) == Some(&b'#') {
+        if grid.get(current.neighbor(dir)) == Some(&b'#') {
             dir = dir.turn_right();
         }
-        current = current.step(dir);
+        current = current.neighbor(dir);
     }
 
     count
@@ -45,7 +45,7 @@ fn is_loop(grid: &Grid<u8>, start: Vec2) -> bool {
         }
         steps[current][dir as usize] = true;
 
-        let next = current.step(dir);
+        let next = current.neighbor(dir);
         if grid.get(next) == Some(&b'#') {
             dir = dir.turn_right();
         } else {

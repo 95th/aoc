@@ -141,7 +141,7 @@ impl<T> Grid<T> {
 
     pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
         Dir::all()
-            .map(move |dir| point.step(dir))
+            .map(move |dir| point.neighbor(dir))
             .filter(move |&p| self.has(p))
     }
 

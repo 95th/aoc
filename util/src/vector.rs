@@ -11,7 +11,7 @@ impl Vec2 {
         Self { x, y }
     }
 
-    pub fn step(self, dir: Dir) -> Self {
+    pub fn neighbor(self, dir: Dir) -> Self {
         self + dir.unit_vector()
     }
 }
