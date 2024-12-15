@@ -89,11 +89,7 @@ impl<T> Grid<T> {
     }
 
     pub fn replace(&mut self, point: Vec2, value: T) -> Option<T> {
-        if self.has(point) {
-            Some(mem::replace(&mut self[point], value))
-        } else {
-            None
-        }
+        self.get_mut(point).map(|dest| mem::replace(dest, value))
     }
 
     pub fn map<U: Clone>(&self, value: U) -> Grid<U> {
@@ -125,6 +121,10 @@ impl<T> Grid<T> {
 
     pub fn get(&self, point: Vec2) -> Option<&T> {
         self.to_index(point).and_then(|i| self.data.get(i))
+    }
+
+    pub fn get_mut(&mut self, point: Vec2) -> Option<&mut T> {
+        self.to_index(point).and_then(move |i| self.data.get_mut(i))
     }
 
     pub fn has(&self, point: Vec2) -> bool {
