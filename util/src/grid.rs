@@ -50,6 +50,7 @@ impl Grid<u8> {
                 cols = line.len();
             }
         }
+        assert!(cols > 0);
         assert_eq!(data.len() % cols, 0);
         Self { data, cols }
     }
@@ -69,6 +70,7 @@ impl<T: FromStr> Grid<T> {
             }
         }
 
+        assert!(cols > 0);
         assert_eq!(data.len() % cols, 0);
         Ok(Self { data, cols })
     }
