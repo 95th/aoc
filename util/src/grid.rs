@@ -88,7 +88,7 @@ impl<T> Grid<T> {
     }
 
     pub fn replace(&mut self, point: Vec2, mut value: T) -> Option<T> {
-        if self.contains_point(point) {
+        if self.has(point) {
             std::mem::swap(&mut self[point], &mut value);
             Some(value)
         } else {
@@ -127,8 +127,8 @@ impl<T> Grid<T> {
         self.to_index(point).and_then(|i| self.data.get(i))
     }
 
-    pub fn contains_point(&self, Vec2 { x, y }: Vec2) -> bool {
-        x >= 0 && y >= 0 && y < self.height() as i32 && x < self.width() as i32
+    pub fn has(&self, point: Vec2) -> bool {
+        self.to_index(point).map_or(false, |i| i < self.data.len())
     }
 
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Vec2> {
@@ -142,7 +142,7 @@ impl<T> Grid<T> {
     pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
         Dir::all()
             .map(move |dir| point.step(dir))
-            .filter(move |&p| self.contains_point(p))
+            .filter(move |&p| self.has(p))
     }
 
     fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {

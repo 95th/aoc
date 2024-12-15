@@ -20,7 +20,7 @@ fn part_1(input: &str) -> usize {
     let mut steps = grid.map(false);
     let mut count = 0;
 
-    while grid.contains_point(current) {
+    while grid.has(current) {
         if !steps[current] {
             steps[current] = true;
             count += 1;
@@ -39,7 +39,7 @@ fn is_loop(grid: &Grid<u8>, start: Vec2) -> bool {
     let mut steps = grid.map([false; 4]);
 
     let mut current = start;
-    while grid.contains_point(current) {
+    while grid.has(current) {
         if steps[current][dir as usize] {
             return true;
         }
