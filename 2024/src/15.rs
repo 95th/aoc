@@ -262,6 +262,7 @@ vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
 v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^";
     assert_eq!(part_2(data), 9021);
 }
+
 #[test]
 fn test_part_2_small() {
     let data = r"##########
