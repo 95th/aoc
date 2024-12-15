@@ -42,6 +42,7 @@ where
 }
 
 impl Grid<u8> {
+    /// Create a new grid from a string of bytes.
     pub fn from_bytes(str: &str) -> Self {
         let mut data = vec![];
         let mut cols = 0;
@@ -78,6 +79,7 @@ impl<T: FromStr> Grid<T> {
 }
 
 impl<T> Grid<T> {
+    /// Create a new grid with the given dimensions and fill it with the given value.
     pub fn new(width: usize, height: usize, value: T) -> Grid<T>
     where
         T: Clone,
@@ -88,14 +90,19 @@ impl<T> Grid<T> {
         }
     }
 
+    /// Replace the value at the given point with the given value, returning the old value.
+    ///
+    /// If the point is out of bounds, return None.
     pub fn replace(&mut self, point: Vec2, value: T) -> Option<T> {
         self.get_mut(point).map(|dest| mem::replace(dest, value))
     }
 
+    /// Create a new grid with the same dimensions as this one, and fill it with given value.
     pub fn map<U: Clone>(&self, value: U) -> Grid<U> {
         Grid::new(self.width(), self.height(), value)
     }
 
+    /// Swap the values at the given points.
     pub fn swap(&mut self, a: Vec2, b: Vec2)
     where
         T: Clone,
@@ -105,32 +112,39 @@ impl<T> Grid<T> {
         self.data.swap(i, j);
     }
 
+    /// Number of rows in the grid.
     pub fn height(&self) -> usize {
         self.data.len() / self.cols
     }
 
+    /// Number of columns in the grid.
     pub fn width(&self) -> usize {
         self.cols
     }
 
+    /// Iterate over the points in the grid.
     pub fn points(&self) -> impl Iterator<Item = Vec2> {
         let rows = self.height() as i32;
         let cols = self.width() as i32;
         (0..rows).flat_map(move |y| (0..cols).map(move |x| Vec2 { x, y }))
     }
 
+    /// Get the value at the given point, if it exists.
     pub fn get(&self, point: Vec2) -> Option<&T> {
         self.to_index(point).and_then(|i| self.data.get(i))
     }
 
+    /// Get a mutable reference to the value at the given point, if it exists.
     pub fn get_mut(&mut self, point: Vec2) -> Option<&mut T> {
         self.to_index(point).and_then(move |i| self.data.get_mut(i))
     }
 
+    /// Check if the given point is within the bounds of the grid.
     pub fn has(&self, point: Vec2) -> bool {
         self.to_index(point).map_or(false, |i| i < self.data.len())
     }
 
+    /// Find the first point in the grid that satisfies the given predicate.
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Vec2> {
         let pos = self.data.iter().position(filter)?;
         Some(Vec2 {
@@ -139,6 +153,7 @@ impl<T> Grid<T> {
         })
     }
 
+    /// Iterate over the neighbors of the given point.
     pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
         Dir::all()
             .map(move |dir| point.neighbor(dir))
