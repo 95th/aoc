@@ -78,20 +78,28 @@ impl<T> Grid<T> {
     }
 
     pub fn map<U: Clone>(&self, value: U) -> Grid<U> {
-        Grid::new(self.cols(), self.rows(), value)
+        Grid::new(self.width(), self.height(), value)
     }
 
-    pub fn rows(&self) -> usize {
+    pub fn swap(&mut self, a: Vec2, b: Vec2)
+    where
+        T: Clone,
+    {
+        let temp = self[a].clone();
+        self[a] = std::mem::replace(&mut self[b], temp);
+    }
+
+    pub fn height(&self) -> usize {
         self.data.len()
     }
 
-    pub fn cols(&self) -> usize {
+    pub fn width(&self) -> usize {
         self.data[0].len()
     }
 
     pub fn points(&self) -> impl Iterator<Item = Vec2> {
-        let rows = self.rows() as i32;
-        let cols = self.cols() as i32;
+        let rows = self.height() as i32;
+        let cols = self.width() as i32;
         (0..rows).flat_map(move |y| (0..cols).map(move |x| Vec2 { x, y }))
     }
 
@@ -106,7 +114,7 @@ impl<T> Grid<T> {
     }
 
     pub fn contains_point(&self, Vec2 { x, y }: Vec2) -> bool {
-        x >= 0 && y >= 0 && y < self.rows() as i32 && x < self.cols() as i32
+        x >= 0 && y >= 0 && y < self.height() as i32 && x < self.width() as i32
     }
 
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Vec2> {

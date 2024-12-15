@@ -8,6 +8,18 @@ pub enum Dir {
     Right,
 }
 
+impl From<u8> for Dir {
+    fn from(byte: u8) -> Self {
+        match byte {
+            b'^' => Self::Up,
+            b'v' => Self::Down,
+            b'<' => Self::Left,
+            b'>' => Self::Right,
+            _ => unreachable!("Invalid direction"),
+        }
+    }
+}
+
 impl Dir {
     pub fn all() -> impl Iterator<Item = Self> {
         [Self::Up, Self::Down, Self::Left, Self::Right].into_iter()
@@ -28,6 +40,15 @@ impl Dir {
             Self::Right => Self::Down,
             Self::Down => Self::Left,
             Self::Left => Self::Up,
+        }
+    }
+
+    pub const fn inverse(self) -> Self {
+        match self {
+            Self::Up => Self::Down,
+            Self::Down => Self::Up,
+            Self::Left => Self::Right,
+            Self::Right => Self::Left,
         }
     }
 

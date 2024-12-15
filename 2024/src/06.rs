@@ -6,16 +6,6 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-fn direction(guard: u8) -> Dir {
-    match guard {
-        b'^' => Dir::Up,
-        b'v' => Dir::Down,
-        b'<' => Dir::Left,
-        b'>' => Dir::Right,
-        _ => unreachable!("what"),
-    }
-}
-
 fn guard_position(grid: &Grid<u8>) -> Vec2 {
     grid.find(|c| matches!(c, b'^' | b'v' | b'<' | b'>'))
         .unwrap()
@@ -24,7 +14,7 @@ fn guard_position(grid: &Grid<u8>) -> Vec2 {
 fn part_1(input: &str) -> usize {
     let grid = Grid::from_bytes(input);
     let start = guard_position(&grid);
-    let mut dir = direction(grid[start]);
+    let mut dir = Dir::from(grid[start]);
 
     let mut current = start;
     let mut steps = grid.map(false);
@@ -45,7 +35,7 @@ fn part_1(input: &str) -> usize {
 }
 
 fn is_loop(grid: &Grid<u8>, start: Vec2) -> bool {
-    let mut dir = direction(grid[start]);
+    let mut dir = Dir::from(grid[start]);
     let mut steps = grid.map([false; 4]);
 
     let mut current = start;
