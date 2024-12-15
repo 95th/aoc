@@ -124,7 +124,7 @@ fn part_2(input: &str) -> i32 {
                         current_layer.insert(next_pos.neighbor(Dir::Left));
                     }
 
-                    let found = loop {
+                    let can_move = loop {
                         if current_layer.iter().all(|&p| grid[p.neighbor(dir)] == b'.') {
                             layers.push(current_layer);
                             break true;
@@ -149,7 +149,7 @@ fn part_2(input: &str) -> i32 {
                         current_layer = next_layer;
                     };
 
-                    if !found {
+                    if !can_move {
                         continue;
                     }
 
