@@ -176,6 +176,12 @@ impl<T> Grid<T> {
         self.to_index(point).and_then(|i| self.data.get(i))
     }
 
+    pub fn get_range(&self, start: Vec2, step: Vec2, count: usize) -> impl Iterator<Item = &T> {
+        (0..count)
+            .map(move |n| start + step * n as i32)
+            .map_while(|p| self.get(p))
+    }
+
     /// Get a mutable reference to the value at the given point, if it exists.
     pub fn get_mut(&mut self, point: Vec2) -> Option<&mut T> {
         self.to_index(point).and_then(move |i| self.data.get_mut(i))

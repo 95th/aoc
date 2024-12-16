@@ -1,4 +1,4 @@
-use aoc_util::{Grid, Vec2};
+use aoc_util::{Grid, DOWN, DOWN_LEFT, DOWN_RIGHT, RIGHT};
 
 fn main() {
     let input = include_str!("../input/04.txt");
@@ -11,20 +11,9 @@ fn part_1(input: &str) -> usize {
     let mut count = 0;
 
     for p in grid.points() {
-        let strings = [
-            Vec2::new(0, 1),
-            Vec2::new(1, 0),
-            Vec2::new(1, 1),
-            Vec2::new(1, -1),
-        ]
-        .into_iter()
-        .map(|delta| {
-            (0..=3)
-                .map_while(|x| grid.get(p + delta * x).copied())
-                .collect::<Vec<_>>()
-        });
-
-        count += strings
+        count += [RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT]
+            .into_iter()
+            .map(|step| grid.get_range(p, step, 4).copied().collect::<Vec<_>>())
             .filter(|x| matches!(&x[..], b"XMAS" | b"SAMX"))
             .count();
     }
@@ -37,19 +26,17 @@ fn part_2(input: &str) -> u32 {
     let mut count = 0;
 
     for p in grid.points() {
-        let strings = [Vec2::new(-1, -1), Vec2::new(-1, 1)]
+        let matching = [DOWN_LEFT, DOWN_RIGHT]
             .into_iter()
-            .map(|delta| {
-                (-1..=1)
-                    .map_while(|x| grid.get(p + delta * x).copied())
+            .map(|step| {
+                grid.get_range(p - step, step, 3)
+                    .copied()
                     .collect::<Vec<_>>()
-            });
-
-        if strings
+            })
             .filter(|x| matches!(&x[..], b"MAS" | b"SAM"))
-            .count()
-            == 2
-        {
+            .count();
+
+        if matching == 2 {
             count += 1;
         }
     }

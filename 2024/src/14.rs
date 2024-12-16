@@ -1,7 +1,7 @@
 use std::io::Write;
 use std::{fs::File, io::BufWriter};
 
-use aoc_util::{Grid, Vec2};
+use aoc_util::{vec2, Grid, Vec2};
 
 fn main() {
     let input = include_str!("../input/14.txt");
@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> Vec<(Vec2, Vec2)> {
             let y = cap[2].parse().unwrap();
             let vx = cap[3].parse().unwrap();
             let vy = cap[4].parse().unwrap();
-            (Vec2::new(x, y), Vec2::new(vx, vy))
+            (vec2(x, y), vec2(vx, vy))
         })
         .collect()
 }
