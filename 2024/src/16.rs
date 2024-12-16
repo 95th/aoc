@@ -27,17 +27,14 @@ fn part_1(input: &str) -> usize {
             continue;
         }
         visited[pos] = visited[pos].min(so_far);
-        pending.push_back((pos.neighbor(dir), dir, so_far + 1));
-        pending.push_back((
-            pos.neighbor(dir.turn_left()),
-            dir.turn_left(),
-            so_far + 1001,
-        ));
-        pending.push_back((
-            pos.neighbor(dir.turn_right()),
-            dir.turn_right(),
-            so_far + 1001,
-        ));
+        let mut add_pending = |dir: Dir, cost: usize| {
+            if grid[pos.neighbor(dir)] != b'#' {
+                pending.push_back((pos.neighbor(dir), dir, so_far + cost));
+            }
+        };
+        add_pending(dir, 1);
+        add_pending(dir.turn_left(), 1001);
+        add_pending(dir.turn_right(), 1001);
     }
 
     points
@@ -68,19 +65,14 @@ fn part_2(input: &str) -> usize {
             continue;
         }
         visited[pos][dir as usize] = visited[pos][dir as usize].min(so_far);
-        pending.push_back((pos.neighbor(dir), dir, so_far + 1, path.clone()));
-        pending.push_back((
-            pos.neighbor(dir.turn_left()),
-            dir.turn_left(),
-            so_far + 1001,
-            path.clone(),
-        ));
-        pending.push_back((
-            pos.neighbor(dir.turn_right()),
-            dir.turn_right(),
-            so_far + 1001,
-            path,
-        ));
+        let mut add_pending = |dir: Dir, cost: usize| {
+            if grid[pos.neighbor(dir)] != b'#' {
+                pending.push_back((pos.neighbor(dir), dir, so_far + cost, path.clone()));
+            }
+        };
+        add_pending(dir, 1);
+        add_pending(dir.turn_left(), 1001);
+        add_pending(dir.turn_right(), 1001);
     }
 
     path_map[&points].len()
