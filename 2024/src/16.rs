@@ -1,7 +1,4 @@
-use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    vec,
-};
+use std::collections::{HashMap, HashSet, VecDeque};
 
 use aoc_util::{Dir, Grid};
 
@@ -17,9 +14,10 @@ fn part_1(input: &str) -> usize {
 
     let mut points = usize::MAX;
     let mut visited = grid.fill(usize::MAX);
-    let mut pending = vec![(start, Dir::Right, 0)];
+    let mut pending = VecDeque::new();
+    pending.push_back((start, Dir::Right, 0));
 
-    while let Some((pos, dir, so_far)) = pending.pop() {
+    while let Some((pos, dir, so_far)) = pending.pop_front() {
         if visited[pos] < so_far || grid[pos] == b'#' {
             continue;
         }
@@ -29,13 +27,13 @@ fn part_1(input: &str) -> usize {
             continue;
         }
         visited[pos] = visited[pos].min(so_far);
-        pending.push((pos.neighbor(dir), dir, so_far + 1));
-        pending.push((
+        pending.push_back((pos.neighbor(dir), dir, so_far + 1));
+        pending.push_back((
             pos.neighbor(dir.turn_left()),
             dir.turn_left(),
             so_far + 1001,
         ));
-        pending.push((
+        pending.push_back((
             pos.neighbor(dir.turn_right()),
             dir.turn_right(),
             so_far + 1001,
