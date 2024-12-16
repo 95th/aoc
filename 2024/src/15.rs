@@ -50,14 +50,10 @@ fn part_1(input: &str) -> i32 {
         }
     }
 
-    let mut sum = 0;
-    for point in grid.points() {
-        if grid[point] == b'O' {
-            sum += 100 * point.y + point.x;
-        }
-    }
-
-    sum
+    grid.points()
+        .filter(|&p| grid[p] == b'O')
+        .map(|p| p.x + 100 * p.y)
+        .sum()
 }
 
 fn can_move_p2(grid: &Grid<u8>, pos: Vec2, dir: Dir) -> bool {
@@ -134,14 +130,10 @@ fn part_2(input: &str) -> i32 {
         }
     }
 
-    let mut sum = 0;
-    for point in grid.points() {
-        if grid[point] == b'[' {
-            sum += 100 * point.y + point.x;
-        }
-    }
-
-    sum
+    grid.points()
+        .filter(|&p| grid[p] == b'[')
+        .map(|p| p.x + 100 * p.y)
+        .sum()
 }
 
 #[test]
