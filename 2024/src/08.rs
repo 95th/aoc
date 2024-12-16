@@ -18,7 +18,7 @@ fn part_1(input: &str) -> u32 {
         }
     }
 
-    let mut antinodes = grid.clone_and_fill(false);
+    let mut antinodes = grid.fill(false);
     let mut count = 0;
 
     for points in map.values() {
@@ -53,7 +53,7 @@ fn part_2(input: &str) -> u32 {
         }
     }
 
-    let mut antinodes = grid.clone_and_fill(1);
+    let mut antinodes = grid.fill(1);
     let mut count = 0;
 
     for points in map.values() {
