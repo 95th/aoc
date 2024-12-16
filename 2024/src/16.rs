@@ -14,10 +14,10 @@ fn part_1(input: &str) -> usize {
 
     let mut points = usize::MAX;
     let mut visited = grid.with_fill(usize::MAX);
-    let mut pending = VecDeque::new();
-    pending.push_back((start, Dir::Right, 0));
+    let mut queue = VecDeque::new();
+    queue.push_back((start, Dir::Right, 0));
 
-    while let Some((pos, dir, so_far)) = pending.pop_front() {
+    while let Some((pos, dir, so_far)) = queue.pop_front() {
         if visited[pos] < so_far || grid[pos] == b'#' {
             continue;
         }
@@ -27,14 +27,15 @@ fn part_1(input: &str) -> usize {
             continue;
         }
         visited[pos] = visited[pos].min(so_far);
-        let mut add_pending = |dir: Dir, cost: usize| {
-            if grid[pos.neighbor(dir)] != b'#' {
-                pending.push_back((pos.neighbor(dir), dir, so_far + cost));
+        let mut enqueue = |dir: Dir, cost: usize| {
+            let next = pos.neighbor(dir);
+            if grid[next] != b'#' {
+                queue.push_back((next, dir, so_far + cost));
             }
         };
-        add_pending(dir, 1);
-        add_pending(dir.turn_left(), 1001);
-        add_pending(dir.turn_right(), 1001);
+        enqueue(dir, 1);
+        enqueue(dir.turn_left(), 1001);
+        enqueue(dir.turn_right(), 1001);
     }
 
     points
@@ -46,11 +47,11 @@ fn part_2(input: &str) -> usize {
 
     let mut points = usize::MAX;
     let mut visited = grid.with_fill([usize::MAX; 4]);
-    let mut pending = VecDeque::new();
-    pending.push_back((start, Dir::Right, 0, Vec::new()));
+    let mut queue = VecDeque::new();
+    queue.push_back((start, Dir::Right, 0, Vec::new()));
     let mut path_map = HashMap::new();
 
-    while let Some((pos, dir, so_far, mut path)) = pending.pop_front() {
+    while let Some((pos, dir, so_far, mut path)) = queue.pop_front() {
         if visited[pos][dir as usize] < so_far || grid[pos] == b'#' {
             continue;
         }
@@ -65,14 +66,15 @@ fn part_2(input: &str) -> usize {
             continue;
         }
         visited[pos][dir as usize] = visited[pos][dir as usize].min(so_far);
-        let mut add_pending = |dir: Dir, cost: usize| {
-            if grid[pos.neighbor(dir)] != b'#' {
-                pending.push_back((pos.neighbor(dir), dir, so_far + cost, path.clone()));
+        let mut enqueue = |dir: Dir, cost: usize| {
+            let next = pos.neighbor(dir);
+            if grid[next] != b'#' {
+                queue.push_back((next, dir, so_far + cost, path.clone()));
             }
         };
-        add_pending(dir, 1);
-        add_pending(dir.turn_left(), 1001);
-        add_pending(dir.turn_right(), 1001);
+        enqueue(dir, 1);
+        enqueue(dir.turn_left(), 1001);
+        enqueue(dir.turn_right(), 1001);
     }
 
     path_map[&points].len()
