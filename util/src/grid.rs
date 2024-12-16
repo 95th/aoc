@@ -176,6 +176,7 @@ impl<T> Grid<T> {
         self.to_index(point).and_then(|i| self.data.get(i))
     }
 
+    /// Get the values in the given range, if they exist.
     pub fn get_range(&self, start: Vec2, step: Vec2, count: usize) -> impl Iterator<Item = &T> {
         (0..count)
             .map(move |n| start + step * n as i32)
