@@ -107,10 +107,27 @@ impl<T> Grid<T> {
     }
 
     /// Create a new grid with the same dimensions as this one, and fill it with given value.
-    pub fn map<U: Clone>(&self, value: U) -> Grid<U> {
-        Grid::new(self.width(), self.height(), value)
+    pub fn clone_and_fill<U>(&self, value: U) -> Grid<U>
+    where
+        U: Clone,
+    {
+        Grid::new(self.cols, self.height(), value)
     }
 
+    /// Create a new grid by applying the given function to each value in this grid.
+    pub fn map<U, F>(&self, f: F) -> Grid<U>
+    where
+        F: FnMut(&T) -> U,
+    {
+        Grid {
+            data: self.data.iter().map(f).collect(),
+            cols: self.cols,
+        }
+    }
+
+    /// Create a new grid by applying the given function to each value in this grid.
+    /// The function should return an array of values, which will be flattened into the new grid.
+    /// The new grid will have N times as many columns as this grid.
     pub fn flat_map<U, F, const N: usize>(&self, f: F) -> Grid<U>
     where
         U: Clone,

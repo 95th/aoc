@@ -17,7 +17,7 @@ fn part_1(input: &str) -> usize {
     let mut dir = Dir::from(grid[start]);
 
     let mut current = start;
-    let mut steps = grid.map(false);
+    let mut steps = grid.clone_and_fill(false);
     let mut count = 0;
 
     while grid.has(current) {
@@ -36,7 +36,7 @@ fn part_1(input: &str) -> usize {
 
 fn is_loop(grid: &Grid<u8>, start: Vec2) -> bool {
     let mut dir = Dir::from(grid[start]);
-    let mut steps = grid.map([false; 4]);
+    let mut steps = grid.clone_and_fill([false; 4]);
 
     let mut current = start;
     while grid.has(current) {
