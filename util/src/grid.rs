@@ -178,9 +178,7 @@ impl<T> Grid<T> {
 
     /// Get the values in the given range, if they exist.
     pub fn get_range(&self, start: Vec2, step: Vec2, count: usize) -> impl Iterator<Item = &T> {
-        (0..count)
-            .map(move |n| start + step * n as i32)
-            .map_while(|p| self.get(p))
+        (0..count).map_while(move |n| self.get(start + step * n as i32))
     }
 
     /// Get a mutable reference to the value at the given point, if it exists.
