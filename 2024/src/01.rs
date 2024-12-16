@@ -1,7 +1,6 @@
-use std::{
-    collections::HashMap,
-    io::{BufRead, Cursor},
-};
+use std::collections::HashMap;
+
+use aoc_util::Grid;
 
 fn main() {
     let input = include_str!("../input/01.txt");
@@ -10,16 +9,13 @@ fn main() {
 }
 
 fn part_1(input: &str) -> u128 {
-    let mut a = Vec::<i128>::new();
-    let mut b = Vec::<i128>::new();
+    let grid = Grid::<i128>::parse(input).unwrap();
+    let mut a = Vec::new();
+    let mut b = Vec::new();
 
-    for line in Cursor::new(input).lines() {
-        let line = line.unwrap();
-        let mut split = line.split_ascii_whitespace();
-        let first = split.next().unwrap();
-        let second = split.next().unwrap();
-        a.push(first.parse().unwrap());
-        b.push(second.parse().unwrap());
+    for row in grid.rows() {
+        a.push(row[0]);
+        b.push(row[1]);
     }
 
     a.sort_unstable();
@@ -33,16 +29,13 @@ fn part_1(input: &str) -> u128 {
 }
 
 fn part_2(input: &str) -> u128 {
+    let grid = Grid::<u128>::parse(input).unwrap();
     let mut a = HashMap::<u128, u128>::new();
     let mut b = HashMap::<u128, u128>::new();
 
-    for line in Cursor::new(input).lines() {
-        let line = line.unwrap();
-        let mut split = line.split_ascii_whitespace();
-        let first: u128 = split.next().unwrap().parse().unwrap();
-        let second: u128 = split.next().unwrap().parse().unwrap();
-        *a.entry(first).or_insert(0) += 1;
-        *b.entry(second).or_insert(0) += 1;
+    for row in grid.rows() {
+        *a.entry(row[0]).or_insert(0) += 1;
+        *b.entry(row[1]).or_insert(0) += 1;
     }
 
     let mut sum = 0;

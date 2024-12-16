@@ -16,7 +16,7 @@ where
     T: std::fmt::Debug,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in self.data.chunks_exact(self.cols) {
+        for row in self.rows() {
             for cell in row {
                 write!(f, "{:?} ", cell)?;
             }
@@ -31,7 +31,7 @@ where
     T: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in self.data.chunks_exact(self.cols) {
+        for row in self.rows() {
             for cell in row {
                 write!(f, "{}", cell)?;
             }
@@ -58,7 +58,7 @@ impl Grid<u8> {
     }
 
     pub fn print(&self) {
-        for row in self.data.chunks_exact(self.cols) {
+        for row in self.rows() {
             for cell in row {
                 print!("{}", *cell as char);
             }
@@ -97,6 +97,10 @@ impl<T> Grid<T> {
             data: vec![value; width * height],
             cols: width,
         }
+    }
+
+    pub fn rows(&self) -> impl Iterator<Item = &[T]> {
+        self.data.chunks_exact(self.cols)
     }
 
     /// Replace the value at the given point with the given value, returning the old value.

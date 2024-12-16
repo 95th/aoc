@@ -1,17 +1,11 @@
 use std::cmp::Ordering;
 
+use aoc_util::Grid;
+
 fn main() {
     let input = include_str!("../input/02.txt");
     println!("Part 1: {}", part_1(input));
     println!("Part 2: {}", part_2(input));
-}
-
-fn parse_input(input: &str) -> impl Iterator<Item = Vec<i32>> + '_ {
-    input.lines().map(|line| {
-        line.split_ascii_whitespace()
-            .map(|x| x.parse().unwrap())
-            .collect()
-    })
 }
 
 fn is_safe(levels: &[i32]) -> bool {
@@ -48,9 +42,10 @@ fn is_almost_safe(levels: &[i32]) -> bool {
 }
 
 fn part_1(input: &str) -> usize {
+    let grid = Grid::parse(input).unwrap();
     let mut safe = 0;
-    for levels in parse_input(input) {
-        if is_safe(&levels) {
+    for levels in grid.rows() {
+        if is_safe(levels) {
             safe += 1;
         }
     }
@@ -58,9 +53,10 @@ fn part_1(input: &str) -> usize {
 }
 
 fn part_2(input: &str) -> usize {
+    let grid = Grid::parse(input).unwrap();
     let mut safe = 0;
-    for levels in parse_input(input) {
-        if is_almost_safe(&levels) {
+    for levels in grid.rows() {
+        if is_almost_safe(levels) {
             safe += 1;
         }
     }
