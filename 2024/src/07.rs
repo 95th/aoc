@@ -8,9 +8,8 @@ fn parse_input(input: &str) -> Vec<(u64, Vec<u64>)> {
     input
         .lines()
         .map(|line| {
-            let mut parts = line.split(": ");
-            let result = parts.next().unwrap().parse().unwrap();
-            let rest = parts.next().unwrap();
+            let (result, rest) = line.split_once(": ").unwrap();
+            let result = result.parse().unwrap();
             let values = rest.split(' ').map(|v| v.parse().unwrap()).collect();
             (result, values)
         })
