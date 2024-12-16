@@ -16,22 +16,25 @@ fn parse_input(input: &str) -> (Grid<u8>, Vec<Dir>) {
     (grid, directions)
 }
 
-fn try_move(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) -> bool {
+fn can_move_p1(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) -> bool {
     let next_pos = pos.neighbor(dir);
     match grid[next_pos] {
         b'#' => false,
+        b'O' => can_move_p1(grid, next_pos, dir),
+        b'.' => true,
+        _ => unreachable!("Invalid character"),
+    }
+}
+
+fn move_p1(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) {
+    let next_pos = pos.neighbor(dir);
+    match grid[next_pos] {
+        b'#' => (),
         b'O' => {
-            if try_move(grid, next_pos, dir) {
-                grid.swap(pos, next_pos);
-                true
-            } else {
-                false
-            }
-        }
-        b'.' => {
+            move_p1(grid, next_pos, dir);
             grid.swap(pos, next_pos);
-            true
         }
+        b'.' => grid.swap(pos, next_pos),
         _ => unreachable!("Invalid character"),
     }
 }
@@ -41,7 +44,8 @@ fn part_1(input: &str) -> i32 {
     let mut pos = grid.find(|&c| c == b'@').unwrap();
 
     for dir in directions {
-        if try_move(&mut grid, pos, dir) {
+        if can_move_p1(&mut grid, pos, dir) {
+            move_p1(&mut grid, pos, dir);
             pos = pos.neighbor(dir);
         }
     }
