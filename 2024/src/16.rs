@@ -3,7 +3,7 @@ use std::{
     vec,
 };
 
-use aoc_util::{Dir, Grid};
+use aoc_util::{Dir, Grid, Vec2};
 
 fn main() {
     let input = include_str!("../input/16.txt");
@@ -20,7 +20,7 @@ fn part_1(input: &str) -> usize {
     let mut pending = vec![(start, Dir::Right, 0)];
 
     while let Some((pos, dir, so_far)) = pending.pop() {
-        if visited[pos] < so_far {
+        if visited[pos] < so_far || grid[pos] == b'#' {
             continue;
         }
         if grid[pos] == b'E' {
@@ -28,11 +28,6 @@ fn part_1(input: &str) -> usize {
             points = points.min(so_far);
             continue;
         }
-
-        if grid[pos] == b'#' {
-            continue;
-        }
-
         visited[pos] = visited[pos].min(so_far);
         pending.push((pos.neighbor(dir), dir, so_far + 1));
         pending.push((
@@ -61,7 +56,7 @@ fn part_2(input: &str) -> usize {
     let mut path_map = HashMap::new();
 
     while let Some((pos, dir, so_far, mut path)) = pending.pop_front() {
-        if visited[pos][dir as usize] < so_far {
+        if visited[pos][dir as usize] < so_far || grid[pos] == b'#' {
             continue;
         }
         path.push(pos);
@@ -72,9 +67,6 @@ fn part_2(input: &str) -> usize {
                 .entry(so_far)
                 .or_insert_with(HashSet::new)
                 .extend(path);
-            continue;
-        }
-        if grid[pos] == b'#' {
             continue;
         }
         visited[pos][dir as usize] = visited[pos][dir as usize].min(so_far);
