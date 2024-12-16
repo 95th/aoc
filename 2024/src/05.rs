@@ -7,24 +7,17 @@ fn main() {
 }
 
 fn parse_input(input: &str) -> (HashMap<i32, HashSet<i32>>, Vec<Vec<i32>>) {
-    let mut lines = input.lines();
+    let (first, second) = input.split_once("\n\n").unwrap();
 
     let mut rules = HashMap::new();
-    for line in lines.by_ref() {
-        if line.is_empty() {
-            break;
-        }
-
-        let mut parts = line.split("|");
-        let (a, b) = (
-            parts.next().unwrap().parse().unwrap(),
-            parts.next().unwrap().parse().unwrap(),
-        );
+    for line in first.lines() {
+        let (a, b) = line.split_once("|").unwrap();
+        let (a, b) = (a.parse().unwrap(), b.parse().unwrap());
         rules.entry(a).or_insert_with(HashSet::new).insert(b);
     }
 
     let mut orderings = Vec::<Vec<i32>>::new();
-    for line in lines {
+    for line in second.lines() {
         orderings.push(line.split(",").map(|x| x.parse().unwrap()).collect());
     }
     (rules, orderings)
