@@ -56,6 +56,15 @@ impl Grid<u8> {
         assert_eq!(data.len() % cols, 0);
         Self { data, cols }
     }
+
+    pub fn print(&self) {
+        for row in self.data.chunks_exact(self.cols) {
+            for cell in row {
+                print!("{}", *cell as char);
+            }
+            println!();
+        }
+    }
 }
 
 impl<T: FromStr> Grid<T> {
