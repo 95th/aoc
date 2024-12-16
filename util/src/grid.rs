@@ -111,6 +111,18 @@ impl<T> Grid<T> {
         Grid::new(self.width(), self.height(), value)
     }
 
+    pub fn flat_map<U, F, const N: usize>(&self, f: F) -> Grid<U>
+    where
+        U: Clone,
+        F: FnMut(&T) -> [U; N],
+    {
+        let data: Vec<U> = self.data.iter().flat_map(f).collect();
+        Grid {
+            data,
+            cols: N * self.cols,
+        }
+    }
+
     /// Swap the values at the given points.
     pub fn swap(&mut self, a: Vec2, b: Vec2)
     where

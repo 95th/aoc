@@ -56,29 +56,6 @@ fn part_1(input: &str) -> i32 {
     sum
 }
 
-fn widen_grid(grid: Grid<u8>) -> Grid<u8> {
-    let mut wide_grid = Grid::new(grid.width() * 2, grid.height(), b'.');
-    for point in grid.points() {
-        let new_point = Vec2::new(point.x * 2, point.y);
-        match grid[point] {
-            b'@' => {
-                wide_grid[new_point] = b'@';
-            }
-            b'O' => {
-                wide_grid[new_point] = b'[';
-                wide_grid[new_point.neighbor(Dir::Right)] = b']';
-            }
-            b'#' => {
-                wide_grid[new_point] = b'#';
-                wide_grid[new_point.neighbor(Dir::Right)] = b'#';
-            }
-            b'.' => (),
-            _ => unreachable!("Invalid character"),
-        }
-    }
-    wide_grid
-}
-
 fn can_move_p2(grid: &Grid<u8>, pos: Vec2, dir: Dir) -> bool {
     let next_pos = pos.neighbor(dir);
     match grid[next_pos] {
@@ -137,7 +114,13 @@ fn move_p2(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) {
 
 fn part_2(input: &str) -> i32 {
     let (mut grid, directions) = parse_input(input);
-    grid = widen_grid(grid);
+    grid = grid.flat_map(|c| match c {
+        b'#' => *b"##",
+        b'O' => *b"[]",
+        b'.' => *b"..",
+        b'@' => *b"@.",
+        _ => unreachable!("Invalid character"),
+    });
     let mut pos = grid.find(|&c| c == b'@').unwrap();
 
     for dir in directions {
