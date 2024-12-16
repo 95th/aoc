@@ -111,7 +111,7 @@ impl<T> Grid<T> {
     }
 
     /// Create a new grid with the same dimensions as this one, and fill it with given value.
-    pub fn fill<U>(&self, value: U) -> Grid<U>
+    pub fn with_fill<U>(&self, value: U) -> Grid<U>
     where
         U: Clone,
     {

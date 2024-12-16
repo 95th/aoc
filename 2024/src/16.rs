@@ -13,7 +13,7 @@ fn part_1(input: &str) -> usize {
     let start = grid.find(|&c| c == b'S').unwrap();
 
     let mut points = usize::MAX;
-    let mut visited = grid.fill(usize::MAX);
+    let mut visited = grid.with_fill(usize::MAX);
     let mut pending = VecDeque::new();
     pending.push_back((start, Dir::Right, 0));
 
@@ -48,7 +48,7 @@ fn part_2(input: &str) -> usize {
     let start = grid.find(|&c| c == b'S').unwrap();
 
     let mut points = usize::MAX;
-    let mut visited = grid.fill([usize::MAX; 4]);
+    let mut visited = grid.with_fill([usize::MAX; 4]);
     let mut pending = VecDeque::new();
     pending.push_back((start, Dir::Right, 0, Vec::new()));
     let mut path_map = HashMap::new();
