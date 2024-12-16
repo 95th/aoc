@@ -89,11 +89,11 @@ impl<T: FromStr> Grid<T> {
 
 impl<T> Grid<T> {
     /// Create a new grid with the given dimensions and fill it with the given value.
-    pub fn new(width: usize, height: usize, value: T) -> Grid<T>
+    pub fn new(width: usize, height: usize, value: T) -> Self
     where
         T: Clone,
     {
-        Grid {
+        Self {
             data: vec![value; width * height],
             cols: width,
         }
@@ -156,7 +156,7 @@ impl<T> Grid<T> {
     }
 
     /// Number of columns in the grid.
-    pub fn width(&self) -> usize {
+    pub const fn width(&self) -> usize {
         self.cols
     }
 
@@ -198,7 +198,7 @@ impl<T> Grid<T> {
             .filter(move |&p| self.has(p))
     }
 
-    fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
+    const fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
         if x >= 0 && y >= 0 && x < self.cols as i32 {
             Some(y as usize * self.cols + x as usize)
         } else {

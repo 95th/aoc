@@ -38,7 +38,7 @@ impl Machine {
                     x: caps[5].parse().unwrap(),
                     y: caps[6].parse().unwrap(),
                 };
-                Machine {
+                Self {
                     a: button_a,
                     b: button_b,
                     prize,
