@@ -79,7 +79,7 @@ fn part_2(input: &str) -> usize {
             pos.neighbor(dir.turn_right()),
             dir.turn_right(),
             so_far + 1001,
-            path.clone(),
+            path,
         ));
     }
 
