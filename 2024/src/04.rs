@@ -13,8 +13,8 @@ fn part_1(input: &str) -> usize {
     for p in grid.points() {
         count += [RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT]
             .into_iter()
-            .map(|step| grid.get_range(p, step, 4).copied().collect::<Vec<_>>())
-            .filter(|x| matches!(&x[..], b"XMAS" | b"SAMX"))
+            .map(|step| grid.get_range(p, step, 4).copied().collect())
+            .filter(|x: &Vec<u8>| matches!(&x[..], b"XMAS" | b"SAMX"))
             .count();
     }
 
@@ -28,12 +28,8 @@ fn part_2(input: &str) -> u32 {
     for p in grid.points() {
         let matching = [DOWN_LEFT, DOWN_RIGHT]
             .into_iter()
-            .map(|step| {
-                grid.get_range(p - step, step, 3)
-                    .copied()
-                    .collect::<Vec<_>>()
-            })
-            .filter(|x| matches!(&x[..], b"MAS" | b"SAM"))
+            .map(|step| grid.get_range(p - step, step, 3).copied().collect())
+            .filter(|x: &Vec<u8>| matches!(&x[..], b"MAS" | b"SAM"))
             .count();
 
         if matching == 2 {
