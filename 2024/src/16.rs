@@ -3,7 +3,7 @@ use std::{
     vec,
 };
 
-use aoc_util::{Dir, Grid, Vec2};
+use aoc_util::{Dir, Grid};
 
 fn main() {
     let input = include_str!("../input/16.txt");
