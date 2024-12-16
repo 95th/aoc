@@ -133,7 +133,7 @@ impl<T> Grid<T> {
         U: Clone,
         F: FnMut(&T) -> [U; N],
     {
-        let data: Vec<U> = self.data.iter().flat_map(f).collect();
+        let data = self.data.iter().flat_map(f).collect();
         Grid {
             data,
             cols: N * self.cols,
