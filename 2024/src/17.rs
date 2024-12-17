@@ -103,9 +103,9 @@ fn part_2(input: &str) -> u128 {
     let b = registers[1];
     let c = registers[2];
 
-    for matched in 0..program.len() {
+    for i in 0..program.len() {
         a *= 8;
-        while evaluate([a, b, c], &program) != program[program.len() - (matched + 1)..] {
+        while evaluate([a, b, c], &program) != program[program.len() - (i + 1)..] {
             a += 1;
         }
     }
