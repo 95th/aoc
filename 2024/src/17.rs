@@ -105,7 +105,7 @@ fn part_2(input: &str) -> u128 {
 
     for matched in 0..program.len() {
         a *= 8;
-        while evaluate([a, b, c], &program) != program[program.len() - matched - 1..] {
+        while evaluate([a, b, c], &program) != program[program.len() - (matched + 1)..] {
             a += 1;
         }
     }
