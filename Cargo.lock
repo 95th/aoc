@@ -16,12 +16,14 @@ name = "aoc_2024"
 version = "0.1.0"
 dependencies = [
  "aoc_util",
- "regex",
 ]
 
 [[package]]
 name = "aoc_util"
 version = "0.1.0"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "memchr"

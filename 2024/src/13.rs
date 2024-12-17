@@ -1,3 +1,5 @@
+use aoc_util::Parse;
+
 fn main() {
     let input = include_str!("../input/13.txt");
     println!("Part 1: {}", part_1(input));
@@ -19,32 +21,19 @@ struct Machine {
 
 impl Machine {
     fn parse(input: &str) -> Vec<Self> {
-        let regex = regex::Regex::new(
+        input.parse_regex(
             r"Button A: X\+(\d+), Y\+(\d+)\nButton B: X\+(\d+), Y\+(\d+)\nPrize: X=(\d+), Y=(\d+)",
-        )
-        .unwrap();
-        regex
-            .captures_iter(input)
-            .map(|caps| {
-                let button_a = Vec2f {
-                    x: caps[1].parse().unwrap(),
-                    y: caps[2].parse().unwrap(),
-                };
-                let button_b = Vec2f {
-                    x: caps[3].parse().unwrap(),
-                    y: caps[4].parse().unwrap(),
-                };
-                let prize = Vec2f {
-                    x: caps[5].parse().unwrap(),
-                    y: caps[6].parse().unwrap(),
-                };
+            |[ax, ay, bx, by, px, py]| {
+                let button_a = Vec2f { x: ax, y: ay };
+                let button_b = Vec2f { x: bx, y: by };
+                let prize = Vec2f { x: px, y: py };
                 Self {
                     a: button_a,
                     b: button_b,
                     prize,
                 }
-            })
-            .collect()
+            },
+        )
     }
 }
 

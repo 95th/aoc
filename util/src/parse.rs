@@ -17,6 +17,12 @@ pub trait Parse {
     where
         T: FromStr,
         T::Err: std::fmt::Debug;
+
+    fn parse_regex<T, U, F, const N: usize>(&self, regex: &str, f: F) -> Vec<T>
+    where
+        F: Fn([U; N]) -> T,
+        U: FromStr,
+        U::Err: std::fmt::Debug;
 }
 
 impl Parse for str {
@@ -47,5 +53,21 @@ impl Parse for str {
     {
         let (a, b) = self.split_once(separator).unwrap();
         (a.parse().unwrap(), b.parse().unwrap())
+    }
+
+    fn parse_regex<T, U, F, const N: usize>(&self, regex: &str, f: F) -> Vec<T>
+    where
+        F: Fn([U; N]) -> T,
+        U: FromStr,
+        U::Err: std::fmt::Debug,
+    {
+        let re = regex::Regex::new(regex).unwrap();
+        re.captures_iter(self)
+            .map(|c| {
+                let (_, values) = c.extract();
+                let parsed = values.map(|v| v.parse().unwrap());
+                f(parsed)
+            })
+            .collect()
     }
 }

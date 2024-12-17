@@ -1,4 +1,4 @@
-use regex::Regex;
+use aoc_util::Parse;
 
 fn main() {
     let input = include_str!("../input/03.txt");
@@ -6,21 +6,13 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-fn parse_input(input: &str) -> Vec<(i32, i32)> {
-    let regex = Regex::new("mul\\((\\d{1,3}),(\\d{1,3})\\)").unwrap();
-    regex
-        .captures_iter(input)
-        .map(|cap| {
-            let a = cap[1].parse().unwrap();
-            let b = cap[2].parse().unwrap();
-            (a, b)
-        })
-        .collect()
+fn parse_input(input: &str) -> Vec<[i32; 2]> {
+    input.parse_regex(r"mul\((\d{1,3}),(\d{1,3})\)", |x| x)
 }
 
 fn part_1(input: &str) -> i32 {
     let mut sum = 0;
-    for (a, b) in parse_input(input) {
+    for [a, b] in parse_input(input) {
         sum += a * b;
     }
     sum
@@ -36,7 +28,7 @@ fn part_2(input: &str) -> i32 {
         let (_a, b) = part.split_once("do()")?;
         Some(b)
     }) {
-        for (a, b) in parse_input(sub_input) {
+        for [a, b] in parse_input(sub_input) {
             sum += a * b;
         }
     }
