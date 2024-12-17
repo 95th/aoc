@@ -1,5 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
+use aoc_util::Parse;
+
 fn main() {
     let input = include_str!("../input/05.txt");
     println!("Part 1: {}", part_1(input));
@@ -11,14 +13,13 @@ fn parse_input(input: &str) -> (HashMap<i32, HashSet<i32>>, Vec<Vec<i32>>) {
 
     let mut rules = HashMap::new();
     for line in first.lines() {
-        let (a, b) = line.split_once("|").unwrap();
-        let (a, b) = (a.parse().unwrap(), b.parse().unwrap());
+        let (a, b) = line.pair("|");
         rules.entry(a).or_insert_with(HashSet::new).insert(b);
     }
 
     let mut orderings = Vec::<Vec<i32>>::new();
     for line in second.lines() {
-        orderings.push(line.split(",").map(|x| x.parse().unwrap()).collect());
+        orderings.push(line.list(","));
     }
     (rules, orderings)
 }

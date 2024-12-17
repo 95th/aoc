@@ -1,3 +1,5 @@
+use aoc_util::Parse;
+
 fn main() {
     let input = include_str!("../input/07.txt");
     println!("Part 1: {}", part_1(input));
@@ -10,7 +12,7 @@ fn parse_input(input: &str) -> Vec<(u64, Vec<u64>)> {
         .map(|line| {
             let (result, rest) = line.split_once(": ").unwrap();
             let result = result.parse().unwrap();
-            let values = rest.split(' ').map(|v| v.parse().unwrap()).collect();
+            let values = rest.list(" ");
             (result, values)
         })
         .collect()

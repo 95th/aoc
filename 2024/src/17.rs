@@ -1,3 +1,5 @@
+use aoc_util::Parse;
+
 fn main() {
     let input = include_str!("../input/17.txt");
     println!("Part 1: {}", part_1(input));
@@ -6,17 +8,8 @@ fn main() {
 
 fn parse_input(input: &str) -> (Vec<u128>, Vec<u8>) {
     let (registers, program) = input.split_once("\n\n").unwrap();
-    let registers = registers
-        .lines()
-        .map(|line| line.split_once(": ").unwrap().1.parse().unwrap())
-        .collect();
-    let program = program
-        .split_once(": ")
-        .unwrap()
-        .1
-        .split(",")
-        .map(|n| n.parse().unwrap())
-        .collect();
+    let registers = registers.lines().map(|s| s.parse_after_colon()).collect();
+    let program = program.after_colon().list(",");
     (registers, program)
 }
 
