@@ -57,7 +57,7 @@ fn part_2(input: &str, width: usize, height: usize) -> String {
     let points = parse_input(input);
     let mut grid = Grid::new(width, height, '.');
 
-    for &p in points.iter() {
+    for p in points {
         grid[p] = '#';
         if calculate_shortest_path(&grid, width, height) == i32::MAX {
             return format!("{},{}", p.x, p.y);
