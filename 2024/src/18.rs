@@ -18,11 +18,10 @@ fn parse_input(input: &str) -> Vec<Vec2> {
         .collect()
 }
 
-fn calculate_shortest_path(grid: &Grid<char>, width: usize, height: usize) -> i32 {
-    let end = vec2(width as i32 - 1, height as i32 - 1);
+fn calculate_shortest_path(grid: &Grid<char>, start: Vec2, end: Vec2) -> i32 {
     let mut visited = grid.with_fill(i32::MAX);
     let mut pending = VecDeque::new();
-    pending.push_back((vec2(0, 0), 0));
+    pending.push_back((start, 0));
 
     while let Some((pos, so_far)) = pending.pop_front() {
         if visited[pos] <= so_far {
@@ -39,7 +38,7 @@ fn calculate_shortest_path(grid: &Grid<char>, width: usize, height: usize) -> i3
             }
         }
     }
-    i32::MAX
+    -1
 }
 
 fn part_1(input: &str, width: usize, height: usize, bytes: usize) -> i32 {
@@ -50,16 +49,21 @@ fn part_1(input: &str, width: usize, height: usize, bytes: usize) -> i32 {
         grid[p] = '#';
     }
 
-    calculate_shortest_path(&grid, width, height)
+    let start = vec2(0, 0);
+    let end = vec2(width as i32 - 1, height as i32 - 1);
+    calculate_shortest_path(&grid, start, end)
 }
 
 fn part_2(input: &str, width: usize, height: usize) -> String {
     let points = parse_input(input);
     let mut grid = Grid::new(width, height, '.');
 
+    let start = vec2(0, 0);
+    let end = vec2(width as i32 - 1, height as i32 - 1);
+
     for p in points {
         grid[p] = '#';
-        if calculate_shortest_path(&grid, width, height) == i32::MAX {
+        if calculate_shortest_path(&grid, start, end) == -1 {
             return format!("{},{}", p.x, p.y);
         }
     }
