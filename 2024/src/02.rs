@@ -42,7 +42,7 @@ fn is_almost_safe(levels: &[i32]) -> bool {
 }
 
 fn part_1(input: &str) -> usize {
-    let grid = Grid::parse(input).unwrap();
+    let grid = Grid::parse(input);
     let mut safe = 0;
     for levels in grid.rows() {
         if is_safe(levels) {
@@ -53,7 +53,7 @@ fn part_1(input: &str) -> usize {
 }
 
 fn part_2(input: &str) -> usize {
-    let grid = Grid::parse(input).unwrap();
+    let grid = Grid::parse(input);
     let mut safe = 0;
     for levels in grid.rows() {
         if is_almost_safe(levels) {

@@ -9,7 +9,7 @@ fn main() {
 }
 
 fn part_1(input: &str) -> u128 {
-    let grid = Grid::<i128>::parse(input).unwrap();
+    let grid = Grid::<i128>::parse(input);
     let mut a = Vec::new();
     let mut b = Vec::new();
 
@@ -29,7 +29,7 @@ fn part_1(input: &str) -> u128 {
 }
 
 fn part_2(input: &str) -> u128 {
-    let grid = Grid::<u128>::parse(input).unwrap();
+    let grid = Grid::<u128>::parse(input);
     let mut a = HashMap::<u128, u128>::new();
     let mut b = HashMap::<u128, u128>::new();
 

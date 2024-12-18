@@ -59,13 +59,13 @@ impl Grid<u8> {
 }
 
 impl<T: FromStr> Grid<T> {
-    pub fn parse(str: &str) -> Result<Self, T::Err> {
+    pub fn parse(str: &str) -> Self {
         let mut data = vec![];
         let mut cols = 0;
 
         for line in str.lines() {
             for value in line.split_whitespace() {
-                data.push(value.parse()?);
+                data.push(value.parse().ok().expect("Failed to parse value"));
             }
             if cols == 0 {
                 cols = data.len();
@@ -74,7 +74,7 @@ impl<T: FromStr> Grid<T> {
 
         assert!(cols > 0);
         assert_eq!(data.len() % cols, 0);
-        Ok(Self { data, cols })
+        Self { data, cols }
     }
 }
 

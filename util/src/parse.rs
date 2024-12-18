@@ -5,24 +5,20 @@ pub trait Parse {
 
     fn parse_after_colon<T>(&self) -> T
     where
-        T: FromStr,
-        T::Err: std::fmt::Debug;
+        T: FromStr;
 
     fn list<T>(&self, separator: &str) -> Vec<T>
     where
-        T: FromStr,
-        T::Err: std::fmt::Debug;
+        T: FromStr;
 
     fn pair<T>(&self, separator: &str) -> (T, T)
     where
-        T: FromStr,
-        T::Err: std::fmt::Debug;
+        T: FromStr;
 
     fn parse_regex<T, U, F, const N: usize>(&self, regex: &str, f: F) -> Vec<T>
     where
         F: Fn([U; N]) -> T,
-        U: FromStr,
-        U::Err: std::fmt::Debug;
+        U: FromStr;
 }
 
 impl Parse for str {
@@ -33,39 +29,37 @@ impl Parse for str {
     fn parse_after_colon<T>(&self) -> T
     where
         T: FromStr,
-        T::Err: std::fmt::Debug,
     {
-        self.after_colon().parse().unwrap()
+        self.after_colon().parse().ok().unwrap()
     }
 
     fn list<T>(&self, separator: &str) -> Vec<T>
     where
         T: FromStr,
-        T::Err: std::fmt::Debug,
     {
-        self.split(separator).map(|n| n.parse().unwrap()).collect()
+        self.split(separator)
+            .map(|n| n.parse().ok().unwrap())
+            .collect()
     }
 
     fn pair<T>(&self, separator: &str) -> (T, T)
     where
         T: FromStr,
-        T::Err: std::fmt::Debug,
     {
         let (a, b) = self.split_once(separator).unwrap();
-        (a.parse().unwrap(), b.parse().unwrap())
+        (a.parse().ok().unwrap(), b.parse().ok().unwrap())
     }
 
     fn parse_regex<T, U, F, const N: usize>(&self, regex: &str, f: F) -> Vec<T>
     where
         F: Fn([U; N]) -> T,
         U: FromStr,
-        U::Err: std::fmt::Debug,
     {
         let re = regex::Regex::new(regex).unwrap();
         re.captures_iter(self)
             .map(|c| {
                 let (_, values) = c.extract();
-                let parsed = values.map(|v| v.parse().unwrap());
+                let parsed = values.map(|v| v.parse().ok().unwrap());
                 f(parsed)
             })
             .collect()
