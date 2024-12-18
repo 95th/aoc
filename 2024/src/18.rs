@@ -1,6 +1,6 @@
 use std::{collections::VecDeque, i32};
 
-use aoc_util::{vec2, Dir, Grid, Parse, Vec2};
+use aoc_util::{vec2, Grid, Parse, Vec2};
 
 fn main() {
     let input = include_str!("../input/18.txt");
@@ -31,9 +31,8 @@ fn calculate_shortest_path(grid: &Grid<char>, start: Vec2, end: Vec2) -> i32 {
             continue;
         }
         visited[pos] = true;
-        for dir in Dir::all() {
-            let next = pos.neighbor(dir);
-            if grid.has(next) && grid[next] != '#' {
+        for next in grid.neighbors(pos) {
+            if grid[next] != '#' && !visited[next] {
                 pending.push_back((next, so_far + 1));
             }
         }

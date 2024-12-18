@@ -23,6 +23,10 @@ impl Vec2 {
     pub fn neighbor(self, dir: Dir) -> Self {
         self + dir.unit_vector()
     }
+
+    pub fn neighbors(self) -> impl Iterator<Item = Self> {
+        Dir::all().map(move |dir| self.neighbor(dir))
+    }
 }
 
 impl std::ops::Add for Vec2 {

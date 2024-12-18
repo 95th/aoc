@@ -4,7 +4,7 @@ use std::{
     str::FromStr,
 };
 
-use crate::{Dir, Vec2};
+use crate::Vec2;
 
 pub struct Grid<T> {
     data: Vec<T>,
@@ -202,9 +202,7 @@ impl<T> Grid<T> {
 
     /// Iterate over the neighbors of the given point.
     pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
-        Dir::all()
-            .map(move |dir| point.neighbor(dir))
-            .filter(move |&p| self.has(p))
+        point.neighbors().filter(move |&p| self.has(p))
     }
 
     const fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {

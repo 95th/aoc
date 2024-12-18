@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use aoc_util::{Dir, Grid, Vec2};
+use aoc_util::{Grid, Vec2};
 
 fn main() {
     let input = include_str!("../input/10.txt");
@@ -9,15 +9,14 @@ fn main() {
 }
 
 fn find_trail(grid: &Grid<u8>, point: Vec2, value: u8, destinations: &mut HashSet<Vec2>) -> usize {
-    if grid.get(point) == Some(&b'9') {
+    if grid[point] == b'9' {
         destinations.insert(point);
         return 1;
     }
 
-    Dir::all().fold(0, |count, dir| {
-        let point = point.neighbor(dir);
-        if grid.get(point) == Some(&value) {
-            count + find_trail(grid, point, value + 1, destinations)
+    grid.neighbors(point).fold(0, |count, next| {
+        if grid[next] == value {
+            count + find_trail(grid, next, value + 1, destinations)
         } else {
             count
         }
