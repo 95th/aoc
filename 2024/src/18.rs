@@ -19,18 +19,18 @@ fn parse_input(input: &str) -> Vec<Vec2> {
 }
 
 fn calculate_shortest_path(grid: &Grid<char>, start: Vec2, end: Vec2) -> i32 {
-    let mut visited = grid.with_fill(i32::MAX);
+    let mut visited = grid.with_fill(false);
     let mut pending = VecDeque::new();
     pending.push_back((start, 0));
 
     while let Some((pos, so_far)) = pending.pop_front() {
-        if visited[pos] <= so_far {
-            continue;
-        }
         if pos == end {
             return so_far;
         }
-        visited[pos] = so_far;
+        if visited[pos] {
+            continue;
+        }
+        visited[pos] = true;
         for dir in Dir::all() {
             let next = pos.neighbor(dir);
             if grid.has(next) && grid[next] != '#' {
