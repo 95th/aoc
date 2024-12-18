@@ -164,7 +164,8 @@ impl<T> Grid<T> {
 
     /// Get the value at the given point, if it exists.
     pub fn get(&self, point: Vec2) -> Option<&T> {
-        self.to_index(point).and_then(|i| self.data.get(i))
+        let i = self.to_index(point)?;
+        self.data.get(i)
     }
 
     /// Get the values in the given range, if they exist.
@@ -174,12 +175,13 @@ impl<T> Grid<T> {
 
     /// Get a mutable reference to the value at the given point, if it exists.
     pub fn get_mut(&mut self, point: Vec2) -> Option<&mut T> {
-        self.to_index(point).and_then(move |i| self.data.get_mut(i))
+        let i = self.to_index(point)?;
+        self.data.get_mut(i)
     }
 
     /// Check if the given point is within the bounds of the grid.
     pub fn has(&self, point: Vec2) -> bool {
-        self.to_index(point).map_or(false, |i| i < self.data.len())
+        self.to_index(point).is_some()
     }
 
     /// Find the first point in the grid that satisfies the given predicate.
@@ -196,12 +198,18 @@ impl<T> Grid<T> {
         point.neighbors().filter(move |&p| self.has(p))
     }
 
-    const fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
-        if x >= 0 && y >= 0 && x < self.cols as i32 {
-            Some(y as usize * self.cols + x as usize)
-        } else {
-            None
+    fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
+        if x < 0 || y < 0 {
+            return None;
         }
+
+        let x = x as usize;
+        let y = y as usize;
+        if x >= self.width() || y >= self.height() {
+            return None;
+        }
+
+        Some(y * self.width() + x)
     }
 }
 
