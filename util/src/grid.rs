@@ -18,7 +18,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for row in self.rows() {
             for cell in row {
-                write!(f, "{:?} ", cell)?;
+                write!(f, "{:20?} ", cell)?;
             }
             writeln!(f)?;
         }
@@ -33,7 +33,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for row in self.rows() {
             for cell in row {
-                write!(f, "{}", cell)?;
+                write!(f, "{:20} ", cell)?;
             }
             writeln!(f)?;
         }
@@ -55,15 +55,6 @@ impl Grid<u8> {
         assert!(cols > 0);
         assert_eq!(data.len() % cols, 0);
         Self { data, cols }
-    }
-
-    pub fn print(&self) {
-        for row in self.rows() {
-            for cell in row {
-                print!("{}", *cell as char);
-            }
-            println!();
-        }
     }
 }
 
