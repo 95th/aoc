@@ -34,7 +34,7 @@ fn calculate_shortest_path(grid: &Grid<char>, width: usize, height: usize) -> i3
         visited[pos] = so_far;
         for dir in Dir::all() {
             let next = pos.neighbor(dir);
-            if grid.has(next) && grid[next] != '#' && visited[next] > so_far + 1 {
+            if grid.has(next) && grid[next] != '#' {
                 pending.push_back((next, so_far + 1));
             }
         }
