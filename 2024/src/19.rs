@@ -21,17 +21,16 @@ fn design_arrangements<'a>(
     if design.is_empty() {
         return 1;
     }
-
     if cache.contains_key(design) {
         return cache[design];
     }
-
-    let mut count = 0;
-    for towel in towels {
+    let count = towels.iter().fold(0, |n, towel| {
         if design.starts_with(towel) {
-            count += design_arrangements(&design[towel.len()..], towels, cache);
+            n + design_arrangements(&design[towel.len()..], towels, cache)
+        } else {
+            n
         }
-    }
+    });
     cache.insert(design, count);
     count
 }
