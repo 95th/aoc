@@ -21,8 +21,8 @@ fn design_arrangements<'a>(
     if design.is_empty() {
         return 1;
     }
-    if cache.contains_key(design) {
-        return cache[design];
+    if let Some(&n) = cache.get(design) {
+        return n;
     }
     let count = towels.iter().fold(0, |n, towel| {
         if design.starts_with(towel) {
