@@ -27,6 +27,10 @@ impl Vec2 {
     pub fn neighbors(self) -> impl Iterator<Item = Self> {
         Dir::all().map(move |dir| self.neighbor(dir))
     }
+
+    pub fn manhattan_dist(&self, other: Vec2) -> i32 {
+        (self.x - other.x).abs() + (self.y - other.y).abs()
+    }
 }
 
 impl std::ops::Add for Vec2 {
