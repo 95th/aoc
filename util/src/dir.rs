@@ -10,11 +10,17 @@ pub enum Dir {
 
 impl From<u8> for Dir {
     fn from(byte: u8) -> Self {
-        match byte {
-            b'^' => Self::Up,
-            b'v' => Self::Down,
-            b'<' => Self::Left,
-            b'>' => Self::Right,
+        Dir::from(byte as char)
+    }
+}
+
+impl From<char> for Dir {
+    fn from(c: char) -> Self {
+        match c {
+            '^' => Self::Up,
+            'v' => Self::Down,
+            '<' => Self::Left,
+            '>' => Self::Right,
             _ => unreachable!("Invalid direction"),
         }
     }

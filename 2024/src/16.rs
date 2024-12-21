@@ -25,7 +25,7 @@ fn main() {
 
 fn part_1(input: &str) -> usize {
     let grid = Grid::from_bytes(input);
-    let start = grid.find(|&c| c == b'S').unwrap();
+    let start = grid.find(|&c| c == b'S');
     let mut visited = grid.with_fill([false; 4]);
 
     let mut min_dist = usize::MAX;
@@ -54,7 +54,7 @@ fn part_1(input: &str) -> usize {
 
 fn part_2(input: &str) -> usize {
     let grid = Grid::from_bytes(input);
-    let start = grid.find(|&c| c == b'S').unwrap();
+    let start = grid.find(|&c| c == b'S');
 
     let mut min_dist = usize::MAX;
     let mut visited = grid.with_fill([usize::MAX; 4]);

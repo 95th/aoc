@@ -8,7 +8,6 @@ fn main() {
 
 fn guard_position(grid: &Grid<u8>) -> Vec2 {
     grid.find(|c| matches!(c, b'^' | b'v' | b'<' | b'>'))
-        .unwrap()
 }
 
 fn part_1(input: &str) -> usize {

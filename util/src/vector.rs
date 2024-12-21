@@ -8,6 +8,7 @@ pub const UP_LEFT: Vec2 = vec2(-1, -1);
 pub const UP_RIGHT: Vec2 = vec2(1, -1);
 pub const DOWN_LEFT: Vec2 = vec2(-1, 1);
 pub const DOWN_RIGHT: Vec2 = vec2(1, 1);
+pub const ZERO: Vec2 = vec2(0, 0);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Vec2 {
@@ -28,8 +29,12 @@ impl Vec2 {
         Dir::all().map(move |dir| self.neighbor(dir))
     }
 
-    pub fn manhattan_dist(&self, other: Vec2) -> i32 {
-        (self.x - other.x).abs() + (self.y - other.y).abs()
+    pub fn manhattan_dist(self, other: Vec2) -> i32 {
+        (self - other).manhattan()
+    }
+
+    pub fn manhattan(&self) -> i32 {
+        self.x.abs() + self.y.abs()
     }
 }
 

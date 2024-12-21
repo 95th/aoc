@@ -41,7 +41,7 @@ fn move_p1(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) {
 
 fn part_1(input: &str) -> i32 {
     let (mut grid, directions) = parse_input(input);
-    let mut pos = grid.find(|&c| c == b'@').unwrap();
+    let mut pos = grid.find(|&c| c == b'@');
 
     for dir in directions {
         if can_move_p1(&mut grid, pos, dir) {
@@ -121,7 +121,7 @@ fn part_2(input: &str) -> i32 {
         b'@' => *b"@.",
         _ => unreachable!("Invalid character"),
     });
-    let mut pos = grid.find(|&c| c == b'@').unwrap();
+    let mut pos = grid.find(|&c| c == b'@');
 
     for dir in directions {
         if can_move_p2(&grid, pos, dir) {

@@ -31,8 +31,8 @@ fn distances(grid: &Grid<u8>, start: Vec2) -> (Grid<usize>, Vec<Vec2>) {
 
 fn solve(input: &str, min_save: usize, allowed_skips: usize) -> usize {
     let grid = Grid::from_bytes(input);
-    let start = grid.find(|c| *c == b'S').unwrap();
-    let end = grid.find(|c| *c == b'E').unwrap();
+    let start = grid.find(|c| *c == b'S');
+    let end = grid.find(|c| *c == b'E');
 
     let (dist, path) = distances(&grid, start);
     let (rev_dist, _) = distances(&grid, end);

@@ -185,12 +185,12 @@ impl<T> Grid<T> {
     }
 
     /// Find the first point in the grid that satisfies the given predicate.
-    pub fn find(&self, filter: impl Fn(&T) -> bool) -> Option<Vec2> {
-        let pos = self.data.iter().position(filter)?;
-        Some(Vec2 {
+    pub fn find(&self, filter: impl Fn(&T) -> bool) -> Vec2 {
+        let pos = self.data.iter().position(filter).unwrap();
+        Vec2 {
             x: (pos % self.cols) as i32,
             y: (pos / self.cols) as i32,
-        })
+        }
     }
 
     /// Iterate over the neighbors of the given point.
