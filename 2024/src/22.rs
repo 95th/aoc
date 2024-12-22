@@ -6,12 +6,12 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-fn next_secret(mut value: u128) -> u128 {
+fn next_secret(mut secret: u128) -> u128 {
     const PRUNE: u128 = 16777216;
-    value = ((value * 64) ^ value) % PRUNE;
-    value = ((value / 32) ^ value) % PRUNE;
-    value = ((value * 2048) ^ value) % PRUNE;
-    value
+    secret = ((secret * 64) ^ secret) % PRUNE;
+    secret = ((secret / 32) ^ secret) % PRUNE;
+    secret = ((secret * 2048) ^ secret) % PRUNE;
+    secret
 }
 
 fn part_1(input: &str) -> u128 {
