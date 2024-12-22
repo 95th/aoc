@@ -28,39 +28,40 @@ fn part_1(input: &str) -> u128 {
     secrets.into_iter().sum()
 }
 
-fn part_2(input: &str) -> u128 {
+fn part_2(input: &str) -> u32 {
     let secrets: Vec<u128> = input.lines().map(|s| s.parse().unwrap()).collect();
-    let prices: Vec<_> = secrets
+    let buyers: Vec<_> = secrets
         .iter()
         .map(|s| {
             let mut secret = *s;
-            let mut history = vec![(secret % 10) as i32];
+            let mut prev_price = (secret % 10) as u8;
+            let mut prices = vec![prev_price];
+            let mut changes = vec![0];
             for _ in 0..2000 {
                 secret = next_secret(secret);
-                history.push((secret % 10) as i32);
+                let price = (secret % 10) as u8;
+                prices.push(price);
+                changes.push(price as i8 - prev_price as i8);
+                prev_price = price;
             }
-            history
+            (prices, changes)
         })
         .collect();
 
-    let mut price_change_map = HashMap::new();
+    let mut change_map = HashMap::new();
+    let mut seen = HashSet::new();
 
-    for prices in prices {
-        let mut seen = HashSet::new();
+    for (prices, changes) in buyers.iter() {
         for i in 4..prices.len() {
-            let change_sequence = [
-                prices[i - 3] - prices[i - 4],
-                prices[i - 2] - prices[i - 3],
-                prices[i - 1] - prices[i - 2],
-                prices[i] - prices[i - 1],
-            ];
-            if seen.insert(change_sequence) {
-                *price_change_map.entry(change_sequence).or_default() += prices[i] as u128;
+            let sequence = &changes[i - 3..=i];
+            if seen.insert(sequence) {
+                *change_map.entry(sequence).or_default() += prices[i] as u32;
             }
         }
+        seen.clear();
     }
 
-    *price_change_map.values().max().unwrap()
+    *change_map.values().max().unwrap()
 }
 
 #[test]
