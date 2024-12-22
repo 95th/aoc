@@ -6,15 +6,21 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
+fn next_secret(mut value: u128) -> u128 {
+    const PRUNE: u128 = 16777216;
+    value = ((value * 64) ^ value) % PRUNE;
+    value = ((value / 32) ^ value) % PRUNE;
+    value = ((value * 2048) ^ value) % PRUNE;
+    value
+}
+
 fn part_1(input: &str) -> u128 {
     let mut secrets: Vec<u128> = input.lines().map(|s| s.parse().unwrap()).collect();
 
     for secret in &mut secrets {
         let mut s = *secret;
         for _ in 0..2000 {
-            s = ((s * 64) ^ s) % 16777216;
-            s = ((s / 32) ^ s) % 16777216;
-            s = ((s * 2048) ^ s) % 16777216;
+            s = next_secret(s);
         }
         *secret = s;
     }
@@ -28,49 +34,33 @@ fn part_2(input: &str) -> u128 {
         .iter()
         .map(|s| {
             let mut secret = *s;
-            let mut list = vec![(secret % 10) as i32];
+            let mut history = vec![(secret % 10) as i32];
             for _ in 0..2000 {
-                secret = ((secret * 64) ^ secret) % 16777216;
-                secret = ((secret / 32) ^ secret) % 16777216;
-                secret = ((secret * 2048) ^ secret) % 16777216;
-                list.push((secret % 10) as i32);
+                secret = next_secret(secret);
+                history.push((secret % 10) as i32);
             }
-            list
+            history
         })
         .collect();
 
-    let change_histories: Vec<_> = prices
-        .iter()
-        .map(|prices| {
-            let mut cache = HashMap::new();
-            let mut change_history = [0; 4];
-            for i in 4..prices.len() {
-                for k in 0..4 {
-                    change_history[k] = prices[i - 4 + k + 1] - prices[i - 4 + k];
-                }
-                if !cache.contains_key(&change_history) {
-                    cache.insert(change_history, prices[i]);
-                }
-            }
-            cache
-        })
-        .collect();
+    let mut price_change_map = HashMap::new();
 
-    let mut combined = HashMap::<[i32; 4], u128>::new();
-    for change_history in change_histories
-        .iter()
-        .flat_map(|m| m.keys())
-        .collect::<HashSet<_>>()
-    {
-        for i in 0..prices.len() {
-            *combined.entry(*change_history).or_default() += change_histories[i]
-                .get(change_history)
-                .copied()
-                .unwrap_or(0) as u128;
+    for prices in prices {
+        let mut cache = HashSet::new();
+        for i in 4..prices.len() {
+            let change_sequence = [
+                prices[i - 3] - prices[i - 4],
+                prices[i - 2] - prices[i - 3],
+                prices[i - 1] - prices[i - 2],
+                prices[i] - prices[i - 1],
+            ];
+            if cache.insert(change_sequence) {
+                *price_change_map.entry(change_sequence).or_default() += prices[i] as u128;
+            }
         }
     }
 
-    *combined.values().max().unwrap()
+    *price_change_map.values().max().unwrap()
 }
 
 #[test]
