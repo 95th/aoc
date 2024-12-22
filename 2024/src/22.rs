@@ -46,7 +46,7 @@ fn part_2(input: &str) -> u128 {
     let mut price_change_map = HashMap::new();
 
     for prices in prices {
-        let mut cache = HashSet::new();
+        let mut seen = HashSet::new();
         for i in 4..prices.len() {
             let change_sequence = [
                 prices[i - 3] - prices[i - 4],
@@ -54,7 +54,7 @@ fn part_2(input: &str) -> u128 {
                 prices[i - 1] - prices[i - 2],
                 prices[i] - prices[i - 1],
             ];
-            if cache.insert(change_sequence) {
+            if seen.insert(change_sequence) {
                 *price_change_map.entry(change_sequence).or_default() += prices[i] as u128;
             }
         }
