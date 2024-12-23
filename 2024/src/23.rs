@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use aoc_util::{max_clique, BiGraph};
+use aoc_util::BiGraph;
 
 fn main() {
     let input = include_str!("../input/23.txt");
@@ -33,12 +33,12 @@ fn part_1(input: &str) -> usize {
 }
 
 fn part_2(input: &str) -> String {
-    let graph = input
+    let graph: BiGraph<&str> = input
         .lines()
         .map(|line| line.split_once("-").unwrap())
         .collect();
 
-    let mut max_clique = max_clique(&graph);
+    let mut max_clique = graph.max_clique();
     max_clique.sort();
     max_clique.join(",")
 }
