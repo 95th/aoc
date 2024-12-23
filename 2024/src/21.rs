@@ -10,19 +10,19 @@ fn main() {
 }
 
 fn get_complexity_rec(
-    id: usize,
     grids: &[&Grid<u8>],
-    a: u8,
-    b: u8,
+    id: usize,
+    from: u8,
+    to: u8,
     memo: &mut HashMap<(usize, u8, u8), usize>,
 ) -> usize {
-    if let Some(&complexity) = memo.get(&(id, a, b)) {
+    if let Some(&complexity) = memo.get(&(id, from, to)) {
         return complexity;
     }
 
     let g = &grids[id];
-    let start = g.find(|c| *c == a);
-    let end = g.find(|c| *c == b);
+    let start = g.find(|c| *c == from);
+    let end = g.find(|c| *c == to);
     let dist = end - start;
 
     if id == grids.len() - 1 {
@@ -46,19 +46,19 @@ fn get_complexity_rec(
         let mut steps = 0;
         let mut a = b'A';
         for &&d in p.iter() {
-            steps += get_complexity_rec(id + 1, grids, a, d, memo);
+            steps += get_complexity_rec(grids, id + 1, a, d, memo);
             pos = pos.neighbor(Dir::from(d));
             if g[pos] == b' ' {
                 continue 'outer;
             }
             a = d;
         }
-        steps += get_complexity_rec(id + 1, grids, **p.last().unwrap(), b'A', memo);
+        steps += get_complexity_rec(grids, id + 1, **p.last().unwrap(), b'A', memo);
         path_sizes.push(steps);
     }
 
     let complexity = path_sizes.into_iter().min().unwrap();
-    memo.insert((id, a, b), complexity);
+    memo.insert((id, from, to), complexity);
     complexity
 }
 
@@ -73,7 +73,7 @@ fn get_complexity(code: &str, robots: usize) -> usize {
     let mut complexity = 0;
     let mut a = b'A';
     for b in code.bytes() {
-        complexity += get_complexity_rec(0, &grids, a, b, &mut memo);
+        complexity += get_complexity_rec(&grids, 0, a, b, &mut memo);
         a = b;
     }
     complexity
