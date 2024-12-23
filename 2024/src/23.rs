@@ -9,15 +9,10 @@ fn main() {
 }
 
 fn part_1(input: &str) -> usize {
-    let connections: Vec<(&str, &str)> = input
+    let graph: BiGraph<&str> = input
         .lines()
         .map(|line| line.split_once("-").unwrap())
         .collect();
-
-    let mut graph = BiGraph::new();
-    for (a, b) in connections {
-        graph.add_edge(a, b);
-    }
 
     let mut set = HashSet::new();
     for node in graph.vertices() {
@@ -38,15 +33,10 @@ fn part_1(input: &str) -> usize {
 }
 
 fn part_2(input: &str) -> String {
-    let connections: Vec<(&str, &str)> = input
+    let graph = input
         .lines()
         .map(|line| line.split_once("-").unwrap())
         .collect();
-
-    let mut graph = BiGraph::new();
-    for (a, b) in connections {
-        graph.add_edge(a, b);
-    }
 
     let mut max_clique = max_clique(&graph);
     max_clique.sort();

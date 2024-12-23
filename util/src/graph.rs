@@ -35,3 +35,16 @@ impl<T: Hash + Eq + Copy> BiGraph<T> {
         self.edges.keys().copied()
     }
 }
+
+impl<T> FromIterator<(T, T)> for BiGraph<T>
+where
+    T: Hash + Eq + Copy,
+{
+    fn from_iter<I: IntoIterator<Item = (T, T)>>(iter: I) -> Self {
+        let mut graph = BiGraph::new();
+        for (a, b) in iter {
+            graph.add_edge(a, b);
+        }
+        graph
+    }
+}
