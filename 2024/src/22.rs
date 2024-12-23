@@ -15,17 +15,14 @@ fn next_secret(mut secret: u128) -> u128 {
 }
 
 fn part_1(input: &str) -> u128 {
-    let mut secrets: Vec<u128> = input.lines().map(|s| s.parse().unwrap()).collect();
-
-    for secret in &mut secrets {
-        let mut s = *secret;
+    let mut total = 0;
+    for mut secret in input.lines().map(|s| s.parse().unwrap()) {
         for _ in 0..2000 {
-            s = next_secret(s);
+            secret = next_secret(secret);
         }
-        *secret = s;
+        total += secret;
     }
-
-    secrets.into_iter().sum()
+    total
 }
 
 fn price(secret: u128) -> i8 {
