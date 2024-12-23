@@ -85,7 +85,7 @@ fn part_2(input: &str) -> String {
     find_max_clique(
         &graph,
         Vec::new(),
-        graph.vertices().copied().collect(),
+        graph.vertices().collect(),
         HashSet::new(),
         &mut max_clique,
     );
