@@ -1,4 +1,6 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
+
+use aoc_util::BiGraph;
 
 fn main() {
     let input = include_str!("../input/23.txt");
@@ -12,31 +14,20 @@ fn part_1(input: &str) -> usize {
         .map(|line| line.split_once("-").unwrap())
         .collect();
 
-    let mut map = HashMap::new();
-
+    let mut graph = BiGraph::new();
     for (a, b) in connections {
-        map.entry(a).or_insert_with(HashSet::new).insert(b);
-        map.entry(b).or_insert_with(HashSet::new).insert(a);
+        graph.add_edge(a, b);
     }
 
     let mut set = HashSet::new();
-
-    for (k, v) in &map {
+    for k in graph.vertices() {
         if !k.starts_with('t') {
             continue;
         }
 
-        for x in v {
-            if x == k {
-                continue;
-            }
-
-            for y in &map[x] {
-                if y == k {
-                    continue;
-                }
-
-                if map[y].contains(k) {
+        for x in graph.neighbors(k) {
+            for y in graph.neighbors(x) {
+                if y != k && graph.has_edge(y, k) {
                     let mut data = [*k, *x, *y];
                     data.sort();
                     set.insert(data);
@@ -53,35 +44,33 @@ fn part_2(input: &str) -> String {
         .map(|line| line.split_once("-").unwrap())
         .collect();
 
-    let mut map = HashMap::new();
-
+    let mut graph = BiGraph::new();
     for (a, b) in connections {
-        map.entry(a).or_insert_with(HashSet::new).insert(b);
-        map.entry(b).or_insert_with(HashSet::new).insert(a);
+        graph.add_edge(a, b);
     }
 
     let mut connected_sets = Vec::<HashSet<&str>>::new();
-    for &k in map.keys() {
+    for k in graph.vertices() {
         let mut new_connected_sets = Vec::new();
         let mut found = false;
         for set in &mut connected_sets {
-            if set.iter().all(|x| map[x].contains(k)) {
+            let mut connected: HashSet<&str> = set
+                .iter()
+                .filter(|&x| graph.has_edge(x, k))
+                .copied()
+                .collect();
+
+            if connected.len() == set.len() {
                 set.insert(k);
-            } else {
-                let mut set: HashSet<_> = set
-                    .iter()
-                    .filter(|&x| map[x].contains(k))
-                    .copied()
-                    .collect();
-                if !set.is_empty() {
-                    set.insert(k);
-                    new_connected_sets.push(set);
-                    found = true;
-                }
+                found = true;
+            } else if !connected.is_empty() {
+                connected.insert(k);
+                new_connected_sets.push(connected);
+                found = true;
             }
         }
         if !found {
-            new_connected_sets.push(HashSet::from([k]));
+            new_connected_sets.push(HashSet::from([*k]));
         }
         connected_sets.extend(new_connected_sets);
     }
