@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use aoc_util::BiGraph;
+use aoc_util::{max_clique, BiGraph};
 
 fn main() {
     let input = include_str!("../input/23.txt");
@@ -37,39 +37,6 @@ fn part_1(input: &str) -> usize {
     set.len()
 }
 
-/// Bron-Kerbosch algorithm
-fn find_max_clique<'a>(
-    graph: &BiGraph<&str>,
-    r: Vec<&'a str>,
-    mut p: Vec<&'a str>,
-    mut x: HashSet<&'a str>,
-    max_clique: &mut Vec<&'a str>,
-) {
-    if p.is_empty() && x.is_empty() {
-        if r.len() > max_clique.len() {
-            *max_clique = r;
-        }
-        return;
-    }
-
-    let pivot = p.iter().chain(x.iter()).next().unwrap();
-    let mut p_dash = p.clone();
-    p_dash.retain(|&n| !graph.contains_edge(pivot, n));
-    while let Some(v) = p_dash.pop() {
-        {
-            let mut r = r.clone();
-            let mut p = p.clone();
-            let mut x = x.clone();
-            r.push(v);
-            p.retain(|&n| graph.contains_edge(v, n));
-            x.retain(|&n| graph.contains_edge(v, n));
-            find_max_clique(graph, r, p, x, max_clique);
-        }
-        x.insert(v);
-        p.retain(|&n| n != v);
-    }
-}
-
 fn part_2(input: &str) -> String {
     let connections: Vec<(&str, &str)> = input
         .lines()
@@ -81,15 +48,7 @@ fn part_2(input: &str) -> String {
         graph.add_edge(a, b);
     }
 
-    let mut max_clique = Vec::new();
-    find_max_clique(
-        &graph,
-        Vec::new(),
-        graph.vertices().collect(),
-        HashSet::new(),
-        &mut max_clique,
-    );
-
+    let mut max_clique = max_clique(&graph);
     max_clique.sort();
     max_clique.join(",")
 }
