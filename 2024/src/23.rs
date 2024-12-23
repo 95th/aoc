@@ -1,6 +1,6 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
-use petgraph::graph::{NodeIndex, UnGraph};
+use aoc_util::BiGraph;
 
 fn main() {
     let input = include_str!("../input/23.txt");
@@ -14,17 +14,14 @@ fn part_1(input: &str) -> usize {
         .map(|line| line.split_once("-").unwrap())
         .collect();
 
-    let mut graph = UnGraph::new_undirected();
-    let mut node_map = HashMap::<&str, NodeIndex>::new();
+    let mut graph = BiGraph::new();
     for (a, b) in connections {
-        let a = *node_map.entry(a).or_insert_with(|| graph.add_node(a));
-        let b = *node_map.entry(b).or_insert_with(|| graph.add_node(b));
-        graph.add_edge(a, b, ());
+        graph.add_edge(a, b);
     }
 
     let mut set = HashSet::new();
-    for (k, node) in node_map {
-        if !k.starts_with('t') {
+    for node in graph.vertices() {
+        if !node.starts_with('t') {
             continue;
         }
         for first in graph.neighbors(node) {
@@ -40,55 +37,56 @@ fn part_1(input: &str) -> usize {
     set.len()
 }
 
+fn find_max_clique<'a>(
+    graph: &BiGraph<&str>,
+    r: Vec<&'a str>,
+    mut p: Vec<&'a str>,
+    mut x: HashSet<&'a str>,
+    max_clique: &mut Vec<&'a str>,
+) {
+    if p.is_empty() && x.is_empty() {
+        if r.len() > max_clique.len() {
+            *max_clique = r;
+        }
+        return;
+    }
+
+    while let Some(v) = p.pop() {
+        {
+            let mut r = r.clone();
+            let mut p = p.clone();
+            let mut x = x.clone();
+            r.push(v);
+            p.retain(|&n| graph.contains_edge(v, n));
+            x.retain(|&n| graph.contains_edge(v, n));
+            find_max_clique(graph, r, p, x, max_clique);
+        }
+        x.insert(v);
+    }
+}
+
 fn part_2(input: &str) -> String {
     let connections: Vec<(&str, &str)> = input
         .lines()
         .map(|line| line.split_once("-").unwrap())
         .collect();
 
-    let mut graph = UnGraph::new_undirected();
-    let mut node_map = HashMap::<&str, NodeIndex>::new();
+    let mut graph = BiGraph::new();
     for (a, b) in connections {
-        let a = *node_map.entry(a).or_insert_with(|| graph.add_node(a));
-        let b = *node_map.entry(b).or_insert_with(|| graph.add_node(b));
-        graph.add_edge(a, b, ());
+        graph.add_edge(a, b);
     }
 
-    let mut connected_sets = Vec::<HashSet<NodeIndex>>::new();
-    for &node in node_map.values() {
-        let mut new_connected_sets = Vec::new();
-        let mut found = false;
-        for set in &mut connected_sets {
-            let mut connected: HashSet<NodeIndex> = set
-                .iter()
-                .filter(|x| graph.contains_edge(**x, node))
-                .copied()
-                .collect();
+    let mut max_clique = Vec::new();
+    find_max_clique(
+        &graph,
+        Vec::new(),
+        graph.vertices().copied().collect(),
+        HashSet::new(),
+        &mut max_clique,
+    );
 
-            if connected.len() == set.len() {
-                set.insert(node);
-                found = true;
-            } else if !connected.is_empty() {
-                connected.insert(node);
-                new_connected_sets.push(connected);
-                found = true;
-            }
-        }
-        if !found {
-            new_connected_sets.push(HashSet::from([node]));
-        }
-        connected_sets.extend(new_connected_sets);
-    }
-
-    connected_sets.sort_by_key(|x| x.len());
-    let mut lan_party = connected_sets
-        .pop()
-        .unwrap()
-        .into_iter()
-        .map(|node| *graph.node_weight(node).unwrap())
-        .collect::<Vec<_>>();
-    lan_party.sort();
-    lan_party.join(",")
+    max_clique.sort();
+    max_clique.join(",")
 }
 
 #[test]
