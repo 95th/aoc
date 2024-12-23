@@ -37,6 +37,7 @@ fn part_1(input: &str) -> usize {
     set.len()
 }
 
+/// Bron-Kerbosch algorithm
 fn find_max_clique<'a>(
     graph: &BiGraph<&str>,
     r: Vec<&'a str>,
