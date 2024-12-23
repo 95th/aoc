@@ -41,20 +41,16 @@ fn part_2(input: &str) -> u32 {
     let mut seen = HashSet::<u32>::new();
 
     for mut secret in input.lines().map(|s| s.parse().unwrap()) {
-        let mut prices = vec![price(secret)];
-        for _ in 0..2000 {
-            secret = next_secret(secret);
-            prices.push(price(secret));
-        }
+        let mut prev_price = price(secret);
         let mut sequence = 0;
-        sequence = push_change(sequence, prices[1] - prices[0]);
-        sequence = push_change(sequence, prices[2] - prices[1]);
-        sequence = push_change(sequence, prices[3] - prices[2]);
 
-        for i in 4..prices.len() {
-            sequence = push_change(sequence, prices[i] - prices[i - 1]);
-            if seen.insert(sequence) {
-                *change_map.entry(sequence).or_default() += prices[i] as u32;
+        for i in 0..2000 {
+            secret = next_secret(secret);
+            let price = price(secret);
+            sequence = push_change(sequence, prev_price - price);
+            prev_price = price;
+            if i >= 4 && seen.insert(sequence) {
+                *change_map.entry(sequence).or_default() += price as u32;
             }
         }
         seen.clear();
