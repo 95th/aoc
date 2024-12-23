@@ -63,7 +63,7 @@ fn get_complexity_rec(
 }
 
 fn get_complexity(code: &str, robots: usize) -> usize {
-    let num_grid = Grid::from_bytes("789\n456\n123\n 0A\n");
+    let num_grid = Grid::from_bytes("789\n456\n123\n 0A");
     let dir_grid = Grid::from_bytes(" ^A\n<v>");
     let mut memo = HashMap::new();
 
