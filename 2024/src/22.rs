@@ -32,7 +32,7 @@ fn price(secret: u128) -> i8 {
     (secret % 10) as i8
 }
 
-fn push_change(sequence: u32, change: i8) -> u32 {
+fn sliding_push(sequence: u32, change: i8) -> u32 {
     sequence << 8 | change as u8 as u32
 }
 
@@ -47,7 +47,7 @@ fn part_2(input: &str) -> u32 {
         for i in 0..2000 {
             secret = next_secret(secret);
             let price = price(secret);
-            sequence = push_change(sequence, prev_price - price);
+            sequence = sliding_push(sequence, prev_price - price);
             prev_price = price;
             if i >= 4 && seen.insert(sequence) {
                 *change_map.entry(sequence).or_default() += price as u32;
