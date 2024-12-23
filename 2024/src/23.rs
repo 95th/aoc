@@ -52,7 +52,10 @@ fn find_max_clique<'a>(
         return;
     }
 
-    while let Some(v) = p.pop() {
+    let pivot = p.iter().chain(x.iter()).next().unwrap();
+    let mut p_dash = p.clone();
+    p_dash.retain(|&n| !graph.contains_edge(pivot, n));
+    while let Some(v) = p_dash.pop() {
         {
             let mut r = r.clone();
             let mut p = p.clone();
@@ -63,6 +66,7 @@ fn find_max_clique<'a>(
             find_max_clique(graph, r, p, x, max_clique);
         }
         x.insert(v);
+        p.retain(|&n| n != v);
     }
 }
 
