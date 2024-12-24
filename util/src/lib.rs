@@ -3,6 +3,7 @@ mod dir;
 mod graph;
 mod grid;
 mod parse;
+mod topological_sort;
 mod vector;
 
 pub use dir::*;
