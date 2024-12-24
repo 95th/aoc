@@ -5,7 +5,6 @@ mod grid;
 mod parse;
 mod vector;
 
-pub use clique::*;
 pub use dir::*;
 pub use graph::*;
 pub use grid::*;
