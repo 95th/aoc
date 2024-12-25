@@ -94,6 +94,10 @@ impl<T> Grid<T> {
         self.data.chunks_exact(self.cols)
     }
 
+    pub fn cols(&self) -> impl Iterator<Item = impl Iterator<Item = &T>> {
+        (0..self.cols).map(move |col| self.data.iter().skip(col).step_by(self.cols))
+    }
+
     /// Replace the value at the given point with the given value, returning the old value.
     ///
     /// If the point is out of bounds, return None.
