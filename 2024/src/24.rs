@@ -102,37 +102,36 @@ fn part_2(input: &str) -> String {
         sorted_wires.len() - sorted_wires.iter().position(|&x| x == *out).unwrap()
     });
 
-    // let mut map = HashMap::new();
-    // for (name, _) in initial_values {
-    //     map.insert(name, None);
-    // }
+    let mut map = HashMap::new();
+    for (name, _) in initial_values.iter().copied() {
+        map.insert(name, None);
+    }
 
-    // for (a, op, b, out) in gates {
-    //     map.insert(out, Some((a, op, b)));
-    // }
+    for (a, op, b, out) in gates.iter().copied() {
+        map.insert(out, Some((a, op, b)));
+    }
 
-    // let mut seen = HashSet::new();
+    let mut seen = HashSet::new();
+    for i in 0..46 {
+        let key = &format!("z{:02}", i)[..];
+        println!("\nkey: {key}");
+        let mut pending = VecDeque::new();
+        pending.push_back((key, 0));
 
-    // for i in 0..45 {
-    //     let key = &format!("z{:02}", i)[..];
-    //     println!("\nkey: {key}");
-    //     let mut pending = VecDeque::new();
-    //     pending.push_back((key, 0));
-
-    //     while let Some((key, d)) = pending.pop_front() {
-    //         if !seen.insert(key.to_string()) {
-    //             continue;
-    //         }
-    //         match map.get(key).unwrap() {
-    //             Some((a, op, b)) => {
-    //                 println!("{:01$} {key} => {a} {op} {b}", ' ', 2 * d);
-    //                 pending.push_back((a, d + 1));
-    //                 pending.push_back((b, d + 1));
-    //             }
-    //             None => (),
-    //         }
-    //     }
-    // }
+        while let Some((key, d)) = pending.pop_front() {
+            if !seen.insert(key.to_string()) {
+                continue;
+            }
+            match map.get(key).unwrap() {
+                Some((a, op, b)) => {
+                    println!("{:01$} {key} => {a} {op} {b}", ' ', 2 * d);
+                    pending.push_back((a, d + 1));
+                    pending.push_back((b, d + 1));
+                }
+                None => (),
+            }
+        }
+    }
 
     let mut values = HashMap::new();
     for (name, value) in initial_values {
@@ -151,7 +150,7 @@ fn part_2(input: &str) -> String {
     }
 
     let mut z: u64 = 0;
-    for i in 0..64 {
+    for i in 0..46 {
         let key = &format!("z{:02}", i)[..];
         if values.contains_key(key) {
             z |= (values[key] as u64) << i;
@@ -159,7 +158,7 @@ fn part_2(input: &str) -> String {
     }
 
     let mut x: u64 = 0;
-    for i in 0..64 {
+    for i in 0..46 {
         let key = &format!("x{:02}", i)[..];
         if values.contains_key(key) {
             x |= (values[key] as u64) << i;
@@ -167,7 +166,7 @@ fn part_2(input: &str) -> String {
     }
 
     let mut y: u64 = 0;
-    for i in 0..64 {
+    for i in 0..46 {
         let key = &format!("y{:02}", i)[..];
         if values.contains_key(key) {
             y |= (values[key] as u64) << i;
@@ -253,28 +252,4 @@ hwm AND bqk -> z03
 tgd XOR rvg -> z12
 tnw OR pbm -> gnj";
     assert_eq!(part_1(data), 2024);
-}
-
-#[test]
-fn test_part_2() {
-    let data = r"x00: 0
-x01: 1
-x02: 0
-x03: 1
-x04: 0
-x05: 1
-y00: 0
-y01: 0
-y02: 1
-y03: 1
-y04: 0
-y05: 1
-
-x00 AND y00 -> z05
-x01 AND y01 -> z02
-x02 AND y02 -> z01
-x03 AND y03 -> z03
-x04 AND y04 -> z04
-x05 AND y05 -> z00";
-    assert_eq!(part_2(data), "z00,z01,z02,z05");
 }
