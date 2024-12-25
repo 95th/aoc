@@ -74,6 +74,7 @@ fn part_1(input: &str) -> u64 {
 fn part_2(input: &str) -> String {
     let (initial_values, mut gates) = parse_input(input);
 
+    // Found manually by printing the wire connections
     let replacements = [
         ("gjc", "qjj"),
         ("qsb", "z39"),
@@ -175,13 +176,6 @@ fn part_2(input: &str) -> String {
 
     println!("{x} + {y} = {z}");
 
-    // Found manually by printing the wire connections above.
-    let replacements = [
-        ("gjc", "qjj"),
-        ("qsb", "z39"),
-        ("wmp", "z17"),
-        ("gvm", "z26"),
-    ];
     let mut replacements: Vec<_> = replacements.into_iter().flat_map(|x| [x.0, x.1]).collect();
     replacements.sort();
     replacements.join(",")
