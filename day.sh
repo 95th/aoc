@@ -17,7 +17,7 @@ if [ ! -f "$rust_file" ]; then
 
     echo "
 [[bin]]
-name = \"$2\"
+name = \"$1_$2\"
 path = \"src/$2.rs\"" >>"$1/Cargo.toml"
 
     touch "$input_file"
