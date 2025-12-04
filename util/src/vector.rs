@@ -29,6 +29,14 @@ impl Vec2 {
         Dir::all().map(move |dir| self.neighbor(dir))
     }
 
+    pub fn neighbors_all(self) -> impl Iterator<Item = Self> {
+        [
+            UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT,
+        ]
+        .into_iter()
+        .map(move |dir| self + dir)
+    }
+
     pub fn manhattan_dist(self, other: Vec2) -> i32 {
         (self - other).manhattan()
     }

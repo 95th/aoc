@@ -6,6 +6,7 @@ use std::{
 
 use crate::Vec2;
 
+#[derive(Clone)]
 pub struct Grid<T> {
     data: Vec<T>,
     cols: usize,
@@ -200,6 +201,10 @@ impl<T> Grid<T> {
     /// Iterate over the neighbors of the given point.
     pub fn neighbors(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
         point.neighbors().filter(move |&p| self.has(p))
+    }
+
+    pub fn neighbors_all(&self, point: Vec2) -> impl Iterator<Item = Vec2> + '_ {
+        point.neighbors_all().filter(move |&p| self.has(p))
     }
 
     fn to_index(&self, Vec2 { x, y }: Vec2) -> Option<usize> {
