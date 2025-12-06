@@ -1,7 +1,7 @@
 [package]
 name = "aoc_2025"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 aoc_util = { path = "../util" }
@@ -22,3 +22,7 @@ path = "src/03.rs"
 [[bin]]
 name = "2025_04"
 path = "src/04.rs"
+
+[[bin]]
+name = "2025_05"
+path = "src/05.rs"
