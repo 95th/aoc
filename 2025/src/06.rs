@@ -28,7 +28,8 @@ fn part_2(input: &str) -> i64 {
 
     let mut output = 0;
     let mut operator = b'+';
-    let mut values = Vec::<String>::new();
+    let mut numbers = Vec::<String>::new();
+
     for col in grid.cols() {
         let mut number = String::new();
         for &v in col {
@@ -39,38 +40,32 @@ fn part_2(input: &str) -> i64 {
         }
 
         if number.trim().is_empty() {
-            if operator == b'+' {
-                output += values
-                    .iter()
-                    .map(|v| v.trim().parse::<i64>().unwrap())
-                    .sum::<i64>();
-            } else {
-                output += values
-                    .iter()
-                    .map(|v| v.trim().parse::<i64>().unwrap())
-                    .product::<i64>();
-            }
-            values.clear();
+            output += eval(&numbers, operator);
+            numbers.clear();
         } else {
-            values.push(number);
+            numbers.push(number);
         }
     }
 
-    if !values.is_empty() {
-        if operator == b'+' {
-            output += values
-                .iter()
-                .map(|v| v.trim().parse::<i64>().unwrap())
-                .sum::<i64>();
-        } else {
-            output += values
-                .iter()
-                .map(|v| v.trim().parse::<i64>().unwrap())
-                .product::<i64>();
-        }
+    if !numbers.is_empty() {
+        output += eval(&numbers, operator);
     }
 
     output
+}
+
+fn eval(numbers: &[String], operator: u8) -> i64 {
+    if operator == b'+' {
+        numbers
+            .iter()
+            .map(|v| v.trim().parse::<i64>().unwrap())
+            .sum::<i64>()
+    } else {
+        numbers
+            .iter()
+            .map(|v| v.trim().parse::<i64>().unwrap())
+            .product::<i64>()
+    }
 }
 
 #[test]
