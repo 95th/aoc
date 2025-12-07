@@ -10,23 +10,20 @@ fn part_1(input: &str) -> i32 {
     let grid = Grid::from_bytes(input);
     let start = grid.find(|c| *c == b'S');
     let mut splits = 0;
+    let mut has_beam = grid.with_fill(false);
+    has_beam[start] = true;
 
-    let mut pending = Vec::new();
-    pending.push(start);
-
-    let mut visited = grid.with_fill(false);
-    while let Some(pos) = pending.pop() {
-        if visited[pos] {
+    for pos in grid.points() {
+        if !has_beam[pos] {
             continue;
         }
-        visited[pos] = true;
         let next = pos.neighbor(Dir::Down);
         match grid.get(next) {
-            Some(b'.') => pending.push(next),
+            Some(b'.') => has_beam[next] = true,
             Some(b'^') => {
+                has_beam[next.neighbor(Dir::Left)] = true;
+                has_beam[next.neighbor(Dir::Right)] = true;
                 splits += 1;
-                pending.push(next.neighbor(Dir::Left));
-                pending.push(next.neighbor(Dir::Right));
             }
             _ => (),
         }
