@@ -21,16 +21,14 @@ fn part_1(input: &str) -> i32 {
         }
         visited[pos] = true;
         let next = pos.neighbor(Dir::Down);
-        if let Some(c) = grid.get(next) {
-            match c {
-                b'.' => pending.push(next),
-                b'^' => {
-                    splits += 1;
-                    pending.push(next.neighbor(Dir::Left));
-                    pending.push(next.neighbor(Dir::Right));
-                }
-                _ => unreachable!("Invalid character"),
+        match grid.get(next) {
+            Some(b'.') => pending.push(next),
+            Some(b'^') => {
+                splits += 1;
+                pending.push(next.neighbor(Dir::Left));
+                pending.push(next.neighbor(Dir::Right));
             }
+            _ => (),
         }
     }
 
@@ -46,17 +44,13 @@ fn part_2(input: &str) -> usize {
 
     for pos in grid.points() {
         let next = pos.neighbor(Dir::Down);
-        if let Some(&c) = grid.get(next) {
-            match c {
-                b'.' | b'S' => {
-                    timelines[next] += timelines[pos];
-                }
-                b'^' => {
-                    timelines[next.neighbor(Dir::Left)] += timelines[pos];
-                    timelines[next.neighbor(Dir::Right)] += timelines[pos];
-                }
-                c => unreachable!("Invalid character: {}", c as char),
+        match grid.get(next) {
+            Some(b'.' | b'S') => timelines[next] += timelines[pos],
+            Some(b'^') => {
+                timelines[next.neighbor(Dir::Left)] += timelines[pos];
+                timelines[next.neighbor(Dir::Right)] += timelines[pos];
             }
+            _ => (),
         }
     }
     timelines.rows().last().unwrap().iter().sum::<usize>()
