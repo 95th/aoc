@@ -135,3 +135,32 @@ impl std::ops::DivAssign<i32> for Vec2 {
         self.y /= scalar;
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct Vec3 {
+    pub x: isize,
+    pub y: isize,
+    pub z: isize,
+}
+
+pub const fn vec3(x: isize, y: isize, z: isize) -> Vec3 {
+    Vec3 { x, y, z }
+}
+
+impl Vec3 {
+    pub fn parse_csv(input: &str) -> Self {
+        let mut list = [0, 0, 0];
+        for (i, x) in input.split(',').map(|x| x.parse().unwrap()).enumerate() {
+            list[i] = x;
+        }
+        Self {
+            x: list[0],
+            y: list[1],
+            z: list[2],
+        }
+    }
+
+    pub fn euclidean_dist(self, other: Vec3) -> isize {
+        (self.x - other.x).pow(2) + (self.y - other.y).pow(2) + (self.z - other.z).pow(2)
+    }
+}
