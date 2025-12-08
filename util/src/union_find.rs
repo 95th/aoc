@@ -24,7 +24,7 @@ impl UnionFind {
         true
     }
 
-    pub fn find(&mut self, a: usize) -> usize {
+    pub fn find(&self, a: usize) -> usize {
         if self.parent[a] == a {
             a
         } else {
