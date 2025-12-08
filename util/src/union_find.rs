@@ -1,25 +1,34 @@
-/// Disjoint set UNION
-/// Returns true if items were not already connected.
-pub fn union(connections: &mut [usize], a: usize, b: usize) -> bool {
-    let root_a = find(connections, a);
-    let root_b = find(connections, b);
-    if root_a == root_b {
-        return false;
-    }
-    connections[root_a] = root_b;
-    for i in 0..connections.len() {
-        if connections[i] == root_a {
-            connections[i] = root_b;
-        }
-    }
-    true
+pub struct UnionFind {
+    parent: Vec<usize>,
 }
 
-/// Disjoint set FIND
-pub fn find(connections: &[usize], a: usize) -> usize {
-    if connections[a] == a {
-        a
-    } else {
-        find(connections, connections[a])
+impl UnionFind {
+    pub fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+        }
+    }
+
+    pub fn union(&mut self, a: usize, b: usize) -> bool {
+        let root_a = self.find(a);
+        let root_b = self.find(b);
+        if root_a == root_b {
+            return false;
+        }
+        self.parent[root_a] = root_b;
+        for i in 0..self.parent.len() {
+            if self.parent[i] == root_a {
+                self.parent[i] = root_b;
+            }
+        }
+        true
+    }
+
+    pub fn find(&mut self, a: usize) -> usize {
+        if self.parent[a] == a {
+            a
+        } else {
+            self.find(self.parent[a])
+        }
     }
 }

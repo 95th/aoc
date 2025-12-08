@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use aoc_util::Vec3;
+use aoc_util::{UnionFind, Vec3};
 
 fn main() {
     let input = include_str!("../input/08.txt");
@@ -22,17 +22,14 @@ fn part_1(input: &str, circuits: usize) -> usize {
     }
     pairs.sort_by_key(|(dist, _)| *dist);
 
-    let mut connections = vec![0; junction_boxes.len()];
-    for i in 0..junction_boxes.len() {
-        connections[i] = i;
-    }
+    let mut connections = UnionFind::new(junction_boxes.len());
     for (_, (i, j)) in pairs.into_iter().take(circuits) {
-        aoc_util::union(&mut connections, i, j);
+        connections.union(i, j);
     }
 
     let mut sizes = HashMap::new();
     for i in 0..junction_boxes.len() {
-        *sizes.entry(aoc_util::find(&connections, i)).or_insert(0) += 1;
+        *sizes.entry(connections.find(i)).or_insert(0) += 1;
     }
     let mut sizes = sizes.into_values().collect::<Vec<_>>();
     sizes.sort();
@@ -53,13 +50,10 @@ fn part_2(input: &str) -> isize {
     }
     pairs.sort_by_key(|(dist, _)| *dist);
 
-    let mut connections = vec![0; junction_boxes.len()];
-    for i in 0..junction_boxes.len() {
-        connections[i] = i;
-    }
+    let mut connections = UnionFind::new(junction_boxes.len());
     let mut pair = (0, 0);
     for (_, (i, j)) in pairs.into_iter() {
-        if aoc_util::union(&mut connections, i, j) {
+        if connections.union(i, j) {
             pair = (i, j);
         }
     }
