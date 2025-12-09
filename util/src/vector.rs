@@ -12,11 +12,11 @@ pub const ZERO: Vec2 = vec2(0, 0);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Vec2 {
-    pub x: i32,
-    pub y: i32,
+    pub x: isize,
+    pub y: isize,
 }
 
-pub const fn vec2(x: i32, y: i32) -> Vec2 {
+pub const fn vec2(x: isize, y: isize) -> Vec2 {
     Vec2 { x, y }
 }
 
@@ -37,11 +37,11 @@ impl Vec2 {
         .map(move |dir| self + dir)
     }
 
-    pub fn manhattan_dist(self, other: Vec2) -> i32 {
+    pub fn manhattan_dist(self, other: Vec2) -> isize {
         (self - other).manhattan()
     }
 
-    pub fn manhattan(&self) -> i32 {
+    pub fn manhattan(&self) -> isize {
         self.x.abs() + self.y.abs()
     }
 }
@@ -76,64 +76,80 @@ impl std::ops::SubAssign for Vec2 {
     }
 }
 
-impl std::ops::Add<i32> for Vec2 {
+impl std::ops::Add<isize> for Vec2 {
     type Output = Self;
 
-    fn add(self, scalar: i32) -> Self {
+    fn add(self, scalar: isize) -> Self {
         vec2(self.x + scalar, self.y + scalar)
     }
 }
 
-impl std::ops::AddAssign<i32> for Vec2 {
-    fn add_assign(&mut self, scalar: i32) {
+impl std::ops::AddAssign<isize> for Vec2 {
+    fn add_assign(&mut self, scalar: isize) {
         self.x += scalar;
         self.y += scalar;
     }
 }
 
-impl std::ops::Sub<i32> for Vec2 {
+impl std::ops::Sub<isize> for Vec2 {
     type Output = Self;
 
-    fn sub(self, scalar: i32) -> Self {
+    fn sub(self, scalar: isize) -> Self {
         vec2(self.x - scalar, self.y - scalar)
     }
 }
 
-impl std::ops::SubAssign<i32> for Vec2 {
-    fn sub_assign(&mut self, scalar: i32) {
+impl std::ops::SubAssign<isize> for Vec2 {
+    fn sub_assign(&mut self, scalar: isize) {
         self.x -= scalar;
         self.y -= scalar;
     }
 }
 
-impl std::ops::Mul<i32> for Vec2 {
+impl std::ops::Mul<isize> for Vec2 {
     type Output = Self;
 
-    fn mul(self, scalar: i32) -> Self {
+    fn mul(self, scalar: isize) -> Self {
         vec2(self.x * scalar, self.y * scalar)
     }
 }
 
-impl std::ops::MulAssign<i32> for Vec2 {
-    fn mul_assign(&mut self, scalar: i32) {
+impl std::ops::MulAssign<isize> for Vec2 {
+    fn mul_assign(&mut self, scalar: isize) {
         self.x *= scalar;
         self.y *= scalar;
     }
 }
 
-impl std::ops::Div<i32> for Vec2 {
+impl std::ops::Div<isize> for Vec2 {
     type Output = Self;
 
-    fn div(self, scalar: i32) -> Self {
+    fn div(self, scalar: isize) -> Self {
         vec2(self.x / scalar, self.y / scalar)
     }
 }
 
-impl std::ops::DivAssign<i32> for Vec2 {
-    fn div_assign(&mut self, scalar: i32) {
+impl std::ops::DivAssign<isize> for Vec2 {
+    fn div_assign(&mut self, scalar: isize) {
         self.x /= scalar;
         self.y /= scalar;
     }
+}
+
+pub fn range(start: Vec2, end: Vec2) -> impl Iterator<Item = Vec2> {
+    if start.x != end.x && start.y != end.y {
+        panic!("Range must be horizontal or vertical");
+    }
+    let step = vec2((end.x - start.x).signum(), (end.y - start.y).signum());
+    let mut current = start;
+    std::iter::from_fn(move || {
+        if current == end {
+            return None;
+        }
+        let next = current + step;
+        current = next;
+        Some(current)
+    })
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

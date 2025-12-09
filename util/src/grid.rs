@@ -162,8 +162,8 @@ impl<T> Grid<T> {
 
     /// Iterate over the points in the grid.
     pub fn points(&self) -> impl Iterator<Item = Vec2> {
-        let rows = self.height() as i32;
-        let cols = self.width() as i32;
+        let rows = self.height() as isize;
+        let cols = self.width() as isize;
         (0..rows).flat_map(move |y| (0..cols).map(move |x| Vec2 { x, y }))
     }
 
@@ -175,7 +175,7 @@ impl<T> Grid<T> {
 
     /// Get the values in the given range, if they exist.
     pub fn get_range(&self, start: Vec2, step: Vec2, count: usize) -> impl Iterator<Item = &T> {
-        (0..count).map_while(move |n| self.get(start + step * n as i32))
+        (0..count).map_while(move |n| self.get(start + step * n as isize))
     }
 
     /// Get a mutable reference to the value at the given point, if it exists.
@@ -193,8 +193,8 @@ impl<T> Grid<T> {
     pub fn find(&self, filter: impl Fn(&T) -> bool) -> Vec2 {
         let pos = self.data.iter().position(filter).unwrap();
         Vec2 {
-            x: (pos % self.cols) as i32,
-            y: (pos / self.cols) as i32,
+            x: (pos % self.cols) as isize,
+            y: (pos / self.cols) as isize,
         }
     }
 
