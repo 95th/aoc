@@ -15,7 +15,7 @@ fn parse_input(input: &str) -> Vec<(Vec2, Vec2)> {
     })
 }
 
-fn part_1(input: &str, width: i32, height: i32) -> usize {
+fn part_1(input: &str, width: isize, height: isize) -> usize {
     let mut robots = parse_input(input);
 
     for _ in 0..100 {
@@ -44,7 +44,7 @@ fn part_1(input: &str, width: i32, height: i32) -> usize {
     quad.into_iter().product()
 }
 
-fn part_2(input: &str, width: i32, height: i32) {
+fn part_2(input: &str, width: isize, height: isize) {
     let mut robots = parse_input(input);
     let mut file = BufWriter::new(File::create("output.txt").unwrap());
     for i in 0..10000 {

@@ -49,7 +49,7 @@ fn part_1(input: &str, width: usize, height: usize, bytes: usize) -> i32 {
     }
 
     let start = vec2(0, 0);
-    let end = vec2(width as i32 - 1, height as i32 - 1);
+    let end = vec2(width as isize - 1, height as isize - 1);
     calculate_shortest_path(&grid, start, end)
 }
 
@@ -58,7 +58,7 @@ fn part_2(input: &str, width: usize, height: usize) -> String {
     let mut grid = Grid::new(width, height, '.');
 
     let start = vec2(0, 0);
-    let end = vec2(width as i32 - 1, height as i32 - 1);
+    let end = vec2(width as isize - 1, height as isize - 1);
 
     for p in points {
         grid[p] = '#';

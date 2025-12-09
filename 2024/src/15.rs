@@ -39,7 +39,7 @@ fn move_p1(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) {
     }
 }
 
-fn part_1(input: &str) -> i32 {
+fn part_1(input: &str) -> isize {
     let (mut grid, directions) = parse_input(input);
     let mut pos = grid.find(|&c| c == b'@');
 
@@ -112,7 +112,7 @@ fn move_p2(grid: &mut Grid<u8>, pos: Vec2, dir: Dir) {
     }
 }
 
-fn part_2(input: &str) -> i32 {
+fn part_2(input: &str) -> isize {
     let (mut grid, directions) = parse_input(input);
     grid = grid.flat_map(|c| match c {
         b'#' => *b"##",
