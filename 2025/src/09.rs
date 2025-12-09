@@ -59,12 +59,8 @@ fn part_2(input: &str) -> isize {
     for i in 0..points_with_gap.len() {
         let a = points_with_gap[i];
         let b = points_with_gap[(i + 1) % points_with_gap.len()];
-        let (x1, x2) = (a.x.min(b.x), a.x.max(b.x));
-        let (y1, y2) = (a.y.min(b.y), a.y.max(b.y));
-        for y in y1..=y2 {
-            for x in x1..=x2 {
-                grid[vec2(x, y)] = true;
-            }
+        for p in Vec2::rect_points(a, b) {
+            grid[p] = true;
         }
     }
 
@@ -90,9 +86,7 @@ fn part_2(input: &str) -> isize {
                 continue;
             }
             let (a, b) = (points_with_gap[i], points_with_gap[j]);
-            let (x1, x2) = (a.x.min(b.x), a.x.max(b.x));
-            let (y1, y2) = (a.y.min(b.y), a.y.max(b.y));
-            let valid = (y1..=y2).all(|y| (x1..=x2).all(|x| !exterior[vec2(x, y)]));
+            let valid = Vec2::rect_points(a, b).all(|p| !exterior[p]);
             if valid {
                 max = rect_area;
             }

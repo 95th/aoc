@@ -44,6 +44,13 @@ impl Vec2 {
     pub fn manhattan(&self) -> isize {
         self.x.abs() + self.y.abs()
     }
+
+    /// Iterate over the points in the rectangle defined by the two given diagonal opposite points.
+    pub fn rect_points(a: Self, b: Self) -> impl Iterator<Item = Vec2> {
+        let (x1, x2) = (a.x.min(b.x), a.x.max(b.x));
+        let (y1, y2) = (a.y.min(b.y), a.y.max(b.y));
+        (y1..=y2).flat_map(move |y| (x1..=x2).map(move |x| vec2(x, y)))
+    }
 }
 
 impl std::ops::Add for Vec2 {
