@@ -6,6 +6,8 @@ edition = "2024"
 [dependencies]
 aoc_util = { path = "../util" }
 itertools = "0.13.0"
+microlp = "0.2.11"
+regex = "1.11.1"
 
 [[bin]]
 name = "2025_01"
@@ -42,3 +44,7 @@ path = "src/08.rs"
 [[bin]]
 name = "2025_09"
 path = "src/09.rs"
+
+[[bin]]
+name = "2025_10"
+path = "src/10.rs"
